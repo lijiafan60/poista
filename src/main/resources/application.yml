@@ -1,13 +1,6 @@
 server:
-  port: 8080
+  port: 8081
 spring:
-  thymeleaf:
-    enabled: true  #开启thymeleaf视图解析
-    encoding: utf-8  #编码
-    prefix: classpath:/templates/  #前缀
-    cache: false  #是否使用缓存
-    mode: HTML  #严格的HTML语法模式
-    suffix: .html  #后缀名
   datasource:
     username: root
     password: ygrythd1314
@@ -59,6 +52,7 @@ wx:
   config:
     appid: wx6d5954e305a94207
     originalid: gh_b4f81d822ae3
+    token: fHdb0aJ1kj89Hu5HsJKkjpKfK
 mybatis:
   type-aliases-package: com.ljf.infrastructure.po
   mapper-locations: classpath:mybatis/mapper/*.xml
