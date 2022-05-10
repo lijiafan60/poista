@@ -7,6 +7,7 @@ import com.ljf.ploughthewaves.domain.wx.service.top.IWxValidateService;
 import com.ljf.ploughthewaves.domain.wx.utils.XmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
