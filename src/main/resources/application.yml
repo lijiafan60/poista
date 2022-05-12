@@ -44,10 +44,6 @@ spring:
         # 登录密码
         login-password: 123456
         enabled: true
-  devtools:
-    restart:
-      enabled: true
-      additional-paths: src/main/java
 wx:
   config:
     appid: wx6d5954e305a94207

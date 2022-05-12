@@ -90,4 +90,18 @@ public class MessageTextEntity {
     public void setEventKey(String eventKey) {
         this.eventKey = eventKey;
     }
+
+    @Override
+    public String toString() {
+        return "MessageTextEntity{" +
+                "msgId='" + msgId + '\'' +
+                ", toUserName='" + toUserName + '\'' +
+                ", fromUserName='" + fromUserName + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", msgType='" + msgType + '\'' +
+                ", content='" + content + '\'' +
+                ", event='" + event + '\'' +
+                ", eventKey='" + eventKey + '\'' +
+                '}';
+    }
 }

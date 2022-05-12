@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.ljf.ploughthewaves.domain.wx.utils.XmlUtil.mapToXML;
+import static com.ljf.ploughthewaves.domain.wx.utils.XmlUtil2.mapToXML;
 
 
 public class SendUtil {
