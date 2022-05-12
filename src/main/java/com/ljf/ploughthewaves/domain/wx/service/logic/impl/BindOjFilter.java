@@ -5,19 +5,21 @@ import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 /**
- * 设置姓名，学校，是否公开逻辑
+ * 设置oj信息的处理逻辑
  */
 @Service
 @Slf4j
-public class SetHiddenMsgFilter implements LogicFilter {
+public class BindOjFilter implements LogicFilter {
     @Override
     public String filter(BehaviorMatter request) {
         String params[] = request.getContent().split(" ");
         if(params.length != 3) {
             return null;
         }
-        log.info("{}正在设置隐藏信息: {} + {}",request.getOpenId(),params[1],params[2]);
+        log.info("{}正在绑定OJ: {} + {}",request.getOpenId(),params[1],params[2]);
         return null;
     }
 }

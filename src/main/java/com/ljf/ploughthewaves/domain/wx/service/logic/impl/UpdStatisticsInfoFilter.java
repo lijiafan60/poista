@@ -2,15 +2,21 @@ package com.ljf.ploughthewaves.domain.wx.service.logic.impl;
 
 import com.ljf.ploughthewaves.domain.wx.model.BehaviorMatter;
 import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * 设置oj信息的处理逻辑
+ * 更新信息逻辑
  */
 @Service
-public class SetOjInfoFilter implements LogicFilter {
+@Slf4j
+public class UpdStatisticsInfoFilter implements LogicFilter {
     @Override
     public String filter(BehaviorMatter request) {
-        return null;
+        log.info("{}正在更新统计情况",request.getOpenId());
+        //todo
+        //mq
+        return "正在更新您的统计数据";
     }
+
 }

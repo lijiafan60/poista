@@ -12,7 +12,12 @@ public class SubscribeFilter implements LogicFilter {
 
     @Override
     public String filter(BehaviorMatter request) {
-        return "感谢关注，快来回复抽奖，参与小傅哥的活动吧！";
+        return "感谢关注！期待与你的共同进步！" +
+                "2 查看统计情况" +
+                "3 更新统计情况" +
+                "0 xx xx 绑定oj" +
+                "1 xx xx 解绑oj" +
+                "4 xxx xxx 设置姓名学校" ;
     }
 
 }

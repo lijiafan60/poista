@@ -15,16 +15,19 @@ import java.util.Map;
 public class EngineConfig {
 
     @Resource
-    private GetAllOjSNFilter getAllOjSNFilter;
+    private UpdStatisticsInfoFilter updStatisticsInfoFilter;
+
+    @Resource
+    private GetStatisticsInfoFilter getStatisticsInfoFilter;
 
     @Resource
     private SetHiddenMsgFilter setHiddenMsgFilter;
 
     @Resource
-    private SetOjInfoFilter setOjInfoFilter;
+    private BindOjFilter bindOjFilter;
 
     @Resource
-    private UpdSNFilter updSNFilter;
+    private UnBindOjFilter unBindOjFilter;
 
     @Resource
     private SubscribeFilter subscribeFilter;
@@ -39,10 +42,11 @@ public class EngineConfig {
 
         logicFilterMap.put("text", new HashMap<String, LogicFilter>() {
             {
-                put("getAllOjSN",getAllOjSNFilter);
-                put("setHiddenMsg",setHiddenMsgFilter);
-                put("setOjInfo",setOjInfoFilter);
-                put("updSN",updSNFilter);
+                put("0",bindOjFilter);
+                put("1",unBindOjFilter);
+                put("2",getStatisticsInfoFilter);
+                put("3",updStatisticsInfoFilter);
+                put("4",setHiddenMsgFilter);
             }
         });
 

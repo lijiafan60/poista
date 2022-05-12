@@ -3,12 +3,16 @@ package com.ljf.ploughthewaves.domain.wx.service.engine;
 
 import com.ljf.ploughthewaves.domain.wx.model.BehaviorMatter;
 import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 引擎基类
  */
+@Slf4j
 public class EngineBase extends EngineConfig implements Engine {
 
     @Override
@@ -33,12 +37,11 @@ public class EngineBase extends EngineConfig implements Engine {
 
         // 内容处理
         if ("text".equals(request.getMsgType())) {
-            //todo
-            //怎么处理消息，得到对应的消息处理器;
+            if(Pattern.matches("^[0-4].*",request.getContent())) {
+                return logicGroup.get(request.getContent().substring(0,1));
+            }
             return null;
         }
-
         return null;
     }
-
 }
