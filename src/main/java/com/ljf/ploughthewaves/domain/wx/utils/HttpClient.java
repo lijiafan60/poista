@@ -34,7 +34,7 @@ public class HttpClient {
         // 新建Http头，add方法可以添加参数
         HttpHeaders headers = new HttpHeaders();
         // 设置提交方式
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         // 将请求头部和参数合成一个请求
         HttpEntity<String> requestEntity = new HttpEntity<>(params, headers);
         // 执行HTTP请求，将返回的结构使用String类格式化（可设置为对应返回值格式的类）
