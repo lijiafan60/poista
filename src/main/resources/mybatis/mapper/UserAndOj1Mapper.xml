@@ -22,4 +22,15 @@
             where openid = #{openid}
             ) and ojtype = #{ojType} and oj_username = #{ojUsername};
     </delete>
+
+    <resultMap id="bindInfo" type="com.ljf.ploughthewaves.infrastructure.po.BindInfo">
+        <result column="ojtype" property="ojType"/>
+        <result column="oj_username" property="ojUsername"/>
+        <result column="all_solved_number" property="solvedNumber"/>
+    </resultMap>
+    <select id="getBindInfo" parameterType="String" resultMap="bindInfo">
+        select ojtype, oj_username, all_solved_number
+        from ploughthewaves.user join ploughthewaves.userandoj1 on user.id = userandoj1.uid
+        where user.openid = #{openid};
+    </select>
 </mapper>

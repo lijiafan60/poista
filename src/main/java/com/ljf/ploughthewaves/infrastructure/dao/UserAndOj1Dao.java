@@ -1,5 +1,6 @@
 package com.ljf.ploughthewaves.infrastructure.dao;
 
+import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,4 +23,6 @@ public interface UserAndOj1Dao {
     List<UserAndOj1> queryByUserId(Integer id);
 
     List<UserAndOj1> queryByUidOjType(Integer id,Integer ojType);
+
+    List<BindInfo> getBindInfo(String openid);
 }

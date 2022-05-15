@@ -1,9 +1,11 @@
 package com.ljf.ploughthewaves.infrastructure.repository;
 
+import com.ljf.ploughthewaves.domain.poista.service.crwal.OjFilter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
+import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
@@ -11,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Repository
@@ -65,16 +70,6 @@ public class WxRepository implements IWxRepository {
     }
 
     /**
-     * 获取统计信息
-     * @param openid
-     * @return map --> 转换成xml
-     */
-    @Override
-    public Map<String, String> getStatisticsInfo(String openid) {
-        return null;
-    }
-
-    /**
      * 设置详细信息
      * @param openid
      * @param name
@@ -91,10 +86,15 @@ public class WxRepository implements IWxRepository {
     }
 
     @Override
-    public List<Map<String, String>> getAllBindInfo(String openid) {
-
-        //todo
-        return null;
+    public List<BindInfo> getAllBindInfo(String openid) {
+        List<BindInfo> res1 = userAndOj1Dao.getBindInfo(openid);
+        log.info("{}成功查询1类oj信息",openid);
+        List<BindInfo> res2 = userAndOj2Dao.getBindInfo(openid);
+        log.info("{}成功查询2类oj信息",openid);
+        List<BindInfo> res = Stream.of(res1,res2).flatMap(Collection::stream).collect(Collectors.toList());
+        res.stream().forEach(x -> x.ojName = OjFilter.TypeToName.get(x.ojType));
+        log.info("list合并转换成功");
+        return res;
     }
 
     /**

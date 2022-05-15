@@ -1,5 +1,6 @@
 package com.ljf.ploughthewaves.infrastructure.dao;
 
+import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
@@ -24,4 +25,6 @@ public interface UserAndOj2Dao {
     List<UserAndOj2> queryByUserId(Integer uid);
 
     List<UserAndOj2> queryByUidOjType(Integer uid,Integer ojType);
+
+    List<BindInfo> getBindInfo(String openid);
 }
