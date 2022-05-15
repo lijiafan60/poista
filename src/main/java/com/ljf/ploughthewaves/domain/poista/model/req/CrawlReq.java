@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class CrawlReq {
     public String openid;
     public String drawType;
+    public Integer ojType;
+    public String ojUsername;
 }

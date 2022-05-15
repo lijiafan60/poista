@@ -1,8 +1,8 @@
 package com.ljf.ploughthewaves.infrastructure.dao;
 
-import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface UserAndOj1Dao {
 
     void deleteByUid(Integer uid);
 
-    void deleteByUidOjType(Integer uid,Integer ojType);
+    void deleteByOpenidOjTypeUsername(@Param("ojType") Integer ojType, @Param("ojUsername") String ojUsername,@Param("openid") String openid);
 
     List<UserAndOj1> queryByUserId(Integer id);
 

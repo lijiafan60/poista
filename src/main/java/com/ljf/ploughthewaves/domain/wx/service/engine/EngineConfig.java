@@ -21,7 +21,7 @@ public class EngineConfig {
     private GetStatisticsInfoFilter getStatisticsInfoFilter;
 
     @Resource
-    private SetHiddenMsgFilter setHiddenMsgFilter;
+    private SetDetailInfoFilter setDetailInfoFilter;
 
     @Resource
     private BindOjFilter bindOjFilter;
@@ -35,6 +35,9 @@ public class EngineConfig {
     @Resource
     private UnsubscribeFilter unsubscribeFilter;
 
+    @Resource
+    private GetAllBindInfo getAllBindInfo;
+
     protected static Map<String, Map<String, LogicFilter>> logicFilterMap = new HashMap<>();
 
     @PostConstruct
@@ -46,7 +49,8 @@ public class EngineConfig {
                 put("1",unBindOjFilter);
                 put("2",getStatisticsInfoFilter);
                 put("3",updStatisticsInfoFilter);
-                put("4",setHiddenMsgFilter);
+                put("4",setDetailInfoFilter);
+                put("5",getAllBindInfo);
             }
         });
 

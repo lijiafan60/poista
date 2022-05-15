@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class UpdStatisticsInfoFilter implements LogicFilter {
+
     @Override
     public String filter(BehaviorMatter request) {
         log.info("{}正在更新统计情况",request.getOpenId());
         //todo
         //mq
+
         return "正在更新您的统计数据";
     }
 

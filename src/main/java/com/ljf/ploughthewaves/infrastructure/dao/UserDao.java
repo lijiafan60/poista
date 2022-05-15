@@ -16,7 +16,9 @@ public interface UserDao {
 
     Integer queryUserIdByOpenId(String openid);
 
-    void delete(Integer openid);
+    void delete(Integer uid);
 
     void update(User user);
+
+    void setDetailInfo(User user);
 }

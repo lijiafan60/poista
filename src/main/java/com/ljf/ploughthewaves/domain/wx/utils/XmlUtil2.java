@@ -38,7 +38,7 @@ public class XmlUtil2 {
     /**
      * 将map转化成xml响应给微信服务器
      */
-    static String mapToXML(Map map) {
+    public static String mapToXML(Map map) {
         StringBuffer sb = new StringBuffer();
         sb.append("<xml>");
         mapToXML2(map, sb);

@@ -37,7 +37,7 @@ public class EngineBase extends EngineConfig implements Engine {
 
         // 内容处理
         if ("text".equals(request.getMsgType())) {
-            if(Pattern.matches("^[0-4].*",request.getContent())) {
+            if(Pattern.matches("^[0-5].*",request.getContent())) {
                 return logicGroup.get(request.getContent().substring(0,1));
             }
             return null;
