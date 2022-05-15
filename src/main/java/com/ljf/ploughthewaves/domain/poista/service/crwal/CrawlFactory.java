@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CrawlFactory {
-    public Map<Integer,Crawl> crawlConfig = new HashMap<>();
     @Resource
     private CodeforcesCrawl codeforcesCrawl;
     @Resource
@@ -18,10 +17,12 @@ public class CrawlFactory {
     @Resource
     private VjudgeCrawl vjudgeCrawl;
 
+    public Map<Integer,Crawl> crawlConfig = new HashMap<>();
+
     @PostConstruct
     public void init() {
-        crawlConfig.put(1, codeforcesCrawl);
-        crawlConfig.put(2, atcoderCrawl);
-        crawlConfig.put(3, vjudgeCrawl);
+        crawlConfig.put(0, codeforcesCrawl);
+        crawlConfig.put(1, atcoderCrawl);
+        crawlConfig.put(2, vjudgeCrawl);
     }
 }

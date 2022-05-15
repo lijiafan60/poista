@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContestCrawlRes{
-    public String openid;
+public class ContestCrawlRes extends CommonRes{
+    public Integer uid;
     public Integer ojType;
     public Integer allSolvedNumber;
     public String ojUsername;

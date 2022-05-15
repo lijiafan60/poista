@@ -1,13 +1,17 @@
 package com.ljf.ploughthewaves;
 
+import com.ljf.ploughthewaves.domain.poista.service.util.OkHttpApi;
 import com.ljf.ploughthewaves.domain.wx.model.MessageTextEntity;
 import com.ljf.ploughthewaves.domain.wx.utils.XmlUtil;
 import com.ljf.ploughthewaves.interfaces.WxPortalController;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
+@Slf4j
 @SpringBootTest
 class PloughTheWavesApplicationTests {
     private Logger logger = LoggerFactory.getLogger(PloughTheWavesApplicationTests.class);
@@ -22,5 +26,13 @@ class PloughTheWavesApplicationTests {
         logger.info("xml转bean完成");
         System.out.println(message.getMsgType());
         System.out.println(message.getCreateTime());
+    }
+    @Test
+    void atcoder() throws IOException {
+        OkHttpApi okHttpApi = new OkHttpApi();
+        String run1 = okHttpApi.run("https://kenkoooo.com/atcoder/atcoder-api/v3/user/ac_rank?user=lijiafa8");
+//        String run2 = okHttpApi.run("https://atcoder.jp/users/" + "xlhfd");
+        log.info(run1);
+//        log.info(run2);
     }
 }

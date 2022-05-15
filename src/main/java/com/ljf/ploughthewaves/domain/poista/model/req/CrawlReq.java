@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CrawlReq {
-    public String openid;
-    public String drawType;
+    public Integer uid;
     public Integer ojType;
     public String ojUsername;
 }

@@ -25,7 +25,7 @@ public class DoCrawlRepository implements IDoCrawlRepository {
 
     public void updateOj1(CrawlRes crawlRes) {
         UserAndOj1 userAndOj1 = new UserAndOj1();
-        Integer uid = userDao.queryUserIdByOpenId(crawlRes.getOpenid());
+        Integer uid = crawlRes.getUid();
         userAndOj1.setUid(uid);
         userAndOj1.setOjType(crawlRes.getOjType());
         userAndOj1.setOjUsername(crawlRes.getOjUsername());
@@ -37,7 +37,7 @@ public class DoCrawlRepository implements IDoCrawlRepository {
 
     public void updateOj2(ContestCrawlRes contestCrawlRes) {
         UserAndOj2 userAndOj2 = new UserAndOj2();
-        Integer uid = userDao.queryUserIdByOpenId(contestCrawlRes.getOpenid());
+        Integer uid = contestCrawlRes.getUid();
         userAndOj2.setUid(uid);
         userAndOj2.setOjType(contestCrawlRes.getOjType());
         userAndOj2.setOjUsername(contestCrawlRes.getOjUsername());

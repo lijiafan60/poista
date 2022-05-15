@@ -1,6 +1,6 @@
 package com.ljf.ploughthewaves.infrastructure.repository;
 
-import com.ljf.ploughthewaves.domain.poista.service.crwal.OjFilter;
+import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

@@ -1,6 +1,6 @@
 package com.ljf.ploughthewaves.domain.wx.service.logic.impl;
 
-import com.ljf.ploughthewaves.domain.poista.service.crwal.OjFilter;
+import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.wx.model.BehaviorMatter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 
 /**
  * 设置oj信息的处理逻辑
