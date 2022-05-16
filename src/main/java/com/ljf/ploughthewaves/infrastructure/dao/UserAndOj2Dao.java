@@ -15,7 +15,7 @@ public interface UserAndOj2Dao {
 
     void insertList(List<UserAndOj2> list);
 
-    void updateByList(@Param("list") List<UserAndOj2> userAndOj2List);
+    void update(UserAndOj2 userAndOj2);
 
     void deleteByUid(Integer uid);
 

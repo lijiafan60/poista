@@ -3,6 +3,7 @@ package com.ljf.ploughthewaves.domain.wx.service.logic.impl;
 import com.ljf.ploughthewaves.domain.wx.model.BehaviorMatter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

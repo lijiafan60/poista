@@ -32,7 +32,6 @@ public class AtcoderCrawl implements Crawl {
         atcoder.setOjType(crawlReq.getOjType());
         atcoder.setOjUsername(crawlReq.getOjUsername());
 
-        log.info("time1 : {}",new Date());
         /**
          * 计算总刷题数
          */
@@ -59,7 +58,6 @@ public class AtcoderCrawl implements Crawl {
         }
         Set<String> acSet = new HashSet<>(acList);
         atcoder.setRecentSolvedNumber(acSet.size());
-        log.info("time2 : {}",new Date());
         /**
          * 爬取atcoder网页
          */
@@ -74,7 +72,6 @@ public class AtcoderCrawl implements Crawl {
 
         el = element.select("tr:contains(Rated Matches)");
 
-        log.info("time3 : {}",new Date());
         atcoder.setAllContestNumber(Integer.parseInt(el.get(0).select("td").get(0).text()));
         atcoder.setUpdTime(new Date());
         return atcoder;

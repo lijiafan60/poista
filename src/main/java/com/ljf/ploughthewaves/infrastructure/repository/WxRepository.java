@@ -1,5 +1,6 @@
 package com.ljf.ploughthewaves.infrastructure.repository;
 
+import com.ljf.ploughthewaves.application.mq.producer.KafkaProducer;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.model.res.ContestCrawlRes;
 import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
@@ -15,13 +16,15 @@ import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,6 +42,8 @@ public class WxRepository implements IWxRepository {
     private IDoCrawlRepository doCrawlRepository;
     @Resource
     private CrawlFactory crawlFactory;
+    @Resource
+    private KafkaProducer kafkaProducer;
     /**
      * 用户订阅时添加用户
      * @param openid
@@ -77,7 +82,26 @@ public class WxRepository implements IWxRepository {
         log.info("根据openid查询出crawlReq");
         List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByOpenid(openid);
         List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByOpenid(openid);
-        //todo mq
+        list1.addAll(list2);
+        /**
+         * 发送mq
+         */
+        for(CrawlReq crawlReq:list1) {
+            ListenableFuture<SendResult<String,Object>> future = kafkaProducer.sendCrawlReq(crawlReq);
+            future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+                @Override
+                public void onFailure(Throwable ex) {
+                    log.info("发送mq失败");
+                }
+
+                @Override
+                public void onSuccess(SendResult<String, Object> result) {
+                    log.info("发送mq成功");
+                }
+            });
+        }
+
+        /*
         log.info("根据crawlReqList,DoCrawl中");
         final List<CrawlRes> res1 = new ArrayList<>();
         final List<ContestCrawlRes> res2 = new ArrayList<>();
@@ -101,6 +125,7 @@ public class WxRepository implements IWxRepository {
         doCrawlRepository.updateOj1(res1);
         doCrawlRepository.updateOj2(res2);
         log.info("落库成功");
+         */
     }
 
     /**

@@ -49,20 +49,16 @@
         where user.openid = #{openid};
     </select>
 
-    <update id="updateByList" parameterType="List">
-        <foreach collection="list" item="item" index="index" separator=";">
+    <update id="update" parameterType="com.ljf.ploughthewaves.infrastructure.po.UserAndOj2">
             update ploughthewaves.userandoj2
-            <set>
-                all_solved_number = #{item.allSolvedNumber},
-                now_rating = #{item.nowRating},
-                max_rating = #{item.maxRating},
-                recent_max_rating = #{item.recentMaxRating},
-                recent_solved_number = #{item.recentSolvedNumber},
-                all_contest_number = #{item.allContestNumber},
-                recent_contest_number = #{item.recentContestNumber},
-                upd_time = #{item.updTime}
-            </set>
-            where uid = #{item.uid} and ojtype = #{item.ojType} and oj_username = #{item.ojUsername}
-        </foreach>
+            set all_solved_number = #{allSolvedNumber},
+                now_rating = #{nowRating},
+                max_rating = #{maxRating},
+                recent_max_rating = #{recentMaxRating},
+                recent_solved_number = #{recentSolvedNumber},
+                all_contest_number = #{allContestNumber},
+                recent_contest_number = #{recentContestNumber},
+                upd_time = #{updTime}
+            where uid = #{uid} and ojtype = #{ojType} and oj_username = #{ojUsername}
     </update>
 </mapper>

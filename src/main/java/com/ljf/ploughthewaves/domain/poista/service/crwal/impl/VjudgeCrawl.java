@@ -27,12 +27,10 @@ public class VjudgeCrawl implements Crawl {
         vjudge.setOjType(crawlReq.getOjType());
         vjudge.setOjUsername(crawlReq.getOjUsername());
         vjudge.setUid(crawlReq.getUid());
-        log.info("{}",new Date());
         String run = okHttpApi.run("https://ojhunt.com/api/crawlers/vjudge/" + crawlReq.getOjUsername());
         if(JSONObject.parseObject(run).getString("error").equals("false")) {
             vjudge.setAllSolvedNumber(JSONObject.parseObject(run).getJSONObject("data").getInteger("solved"));
         }
-        log.info("{}",new Date());
         vjudge.setUpdTime(new Date());
         return vjudge;
     }
