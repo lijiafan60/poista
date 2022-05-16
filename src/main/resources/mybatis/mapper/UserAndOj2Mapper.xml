@@ -34,4 +34,35 @@
         from ploughthewaves.user join ploughthewaves.userandoj2 on user.id = userandoj2.uid
         where user.openid = #{openid};
     </select>
+
+    <resultMap id="crawlReq" type="com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq">
+        <result column="uid" property="uid"/>
+        <result column="ojtype" property="ojType"/>
+        <result column="oj_username" property="ojUsername"/>
+        <result column="all_solved_number" property="allSolvedNumber"/>
+        <result column="all_contest_number" property="allContestNumber"/>
+        <result column="upd_time" property="updTime"/>
+    </resultMap>
+    <select id="getCrawlReqListByOpenid" parameterType="String" resultMap="crawlReq">
+        select uid,ojtype,oj_username,all_solved_number,all_contest_number,upd_time
+        from ploughthewaves.user join ploughthewaves.userandoj2 on user.id = userandoj2.uid
+        where user.openid = #{openid};
+    </select>
+
+    <update id="updateByList" parameterType="List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update ploughthewaves.userandoj2
+            <set>
+                all_solved_number = #{item.allSolvedNumber},
+                now_rating = #{item.nowRating},
+                max_rating = #{item.maxRating},
+                recent_max_rating = #{item.recentMaxRating},
+                recent_solved_number = #{item.recentSolvedNumber},
+                all_contest_number = #{item.allContestNumber},
+                recent_contest_number = #{item.recentContestNumber},
+                upd_time = #{item.updTime}
+            </set>
+            where uid = #{item.uid} and ojtype = #{item.ojType} and oj_username = #{item.ojUsername}
+        </foreach>
+    </update>
 </mapper>

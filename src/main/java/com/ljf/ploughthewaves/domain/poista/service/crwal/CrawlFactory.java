@@ -3,12 +3,14 @@ package com.ljf.ploughthewaves.domain.poista.service.crwal;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.impl.AtcoderCrawl;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.impl.CodeforcesCrawl;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.impl.VjudgeCrawl;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CrawlFactory {
     @Resource
     private CodeforcesCrawl codeforcesCrawl;

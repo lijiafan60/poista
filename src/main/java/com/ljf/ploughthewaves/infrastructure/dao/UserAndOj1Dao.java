@@ -1,5 +1,6 @@
 package com.ljf.ploughthewaves.infrastructure.dao;
 
+import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,7 +15,7 @@ public interface UserAndOj1Dao {
 
     void insertList(List<UserAndOj1> list);
 
-    void update(UserAndOj1 userAndOj1);
+    void updateByList(@Param("list") List<UserAndOj1> userAndOj1List);
 
     void deleteByUid(Integer uid);
 
@@ -25,4 +26,6 @@ public interface UserAndOj1Dao {
     List<UserAndOj1> queryByUidOjType(Integer id,Integer ojType);
 
     List<BindInfo> getBindInfo(String openid);
+
+    List<CrawlReq> getCrawlReqListByOpenid(String openid);
 }

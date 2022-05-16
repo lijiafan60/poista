@@ -1,9 +1,13 @@
 package com.ljf.ploughthewaves.domain.wx.service.logic.impl;
 
 import com.ljf.ploughthewaves.domain.wx.model.BehaviorMatter;
+import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * 更新信息逻辑
@@ -12,12 +16,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UpdStatisticsInfoFilter implements LogicFilter {
 
+    @Resource
+    private IWxRepository wxRepository;
+
     @Override
     public String filter(BehaviorMatter request) {
         log.info("{}正在更新统计情况",request.getOpenId());
-        //todo
-        //mq
-
+        wxRepository.updateStatisticsInfo(request.getOpenId());
         return "正在更新您的统计数据";
     }
 

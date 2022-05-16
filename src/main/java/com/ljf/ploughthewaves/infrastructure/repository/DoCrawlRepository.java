@@ -8,10 +8,14 @@ import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 @Repository
 public class DoCrawlRepository implements IDoCrawlRepository {
     @Resource
@@ -20,39 +24,45 @@ public class DoCrawlRepository implements IDoCrawlRepository {
     @Resource
     public UserAndOj2Dao userAndOj2Dao;
 
-    @Resource
-    public UserDao userDao;
-
-    public void updateOj1(CrawlRes crawlRes) {
-        UserAndOj1 userAndOj1 = new UserAndOj1();
-        Integer uid = crawlRes.getUid();
-        userAndOj1.setUid(uid);
-        userAndOj1.setOjType(crawlRes.getOjType());
-        userAndOj1.setOjUsername(crawlRes.getOjUsername());
-
-        userAndOj1.setAllSolvedNumber(crawlRes.getAllSolvedNumber());
-
-        userAndOj1Dao.update(userAndOj1);
+    public void updateOj1(List<CrawlRes> crawlResList) {
+        log.info("将crawlResList转换成updateOj1List");
+        final List<UserAndOj1> userAndOj1List = new ArrayList<>();
+        crawlResList.stream().forEach(x -> {
+            UserAndOj1 userAndOj1 = new UserAndOj1();
+            Integer uid = x.getUid();
+            userAndOj1.setUid(uid);
+            userAndOj1.setOjType(x.getOjType());
+            userAndOj1.setOjUsername(x.getOjUsername());
+            userAndOj1.setAllSolvedNumber(x.getAllSolvedNumber());
+            userAndOj1List.add(userAndOj1);
+        });
+        log.info("执行落库");
+        userAndOj1Dao.updateByList(userAndOj1List);
     }
 
-    public void updateOj2(ContestCrawlRes contestCrawlRes) {
-        UserAndOj2 userAndOj2 = new UserAndOj2();
-        Integer uid = contestCrawlRes.getUid();
-        userAndOj2.setUid(uid);
-        userAndOj2.setOjType(contestCrawlRes.getOjType());
-        userAndOj2.setOjUsername(contestCrawlRes.getOjUsername());
+    public void updateOj2(List<ContestCrawlRes> contestCrawlResList) {
+        log.info("将contestCrawlResList转换成updateOj2List");
+        final List<UserAndOj2> userAndOj2List = new ArrayList<>();
+        contestCrawlResList.stream().forEach(x -> {
+            UserAndOj2 userAndOj2 = new UserAndOj2();
+            Integer uid = x.getUid();
+            userAndOj2.setUid(uid);
+            userAndOj2.setOjType(x.getOjType());
+            userAndOj2.setOjUsername(x.getOjUsername());
 
-        userAndOj2.setAllContestNumber(contestCrawlRes.getAllContestNumber());
-        userAndOj2.setRecentSolvedNumber(contestCrawlRes.getRecentSolvedNumber());
+            userAndOj2.setAllContestNumber(x.getAllContestNumber());
+            userAndOj2.setRecentSolvedNumber(x.getRecentSolvedNumber());
 
-        userAndOj2.setMaxRating(contestCrawlRes.getMaxRating());
-        userAndOj2.setNowRating(contestCrawlRes.getNowRating());
-        userAndOj2.setRecentMaxRating(contestCrawlRes.getRecentMaxRating());
+            userAndOj2.setMaxRating(x.getMaxRating());
+            userAndOj2.setNowRating(x.getNowRating());
+            userAndOj2.setRecentMaxRating(x.getRecentMaxRating());
 
-        userAndOj2.setAllContestNumber(contestCrawlRes.getAllContestNumber());
-        userAndOj2.setRecentContestNumber(contestCrawlRes.getRecentContestNumber());
-
-        userAndOj2Dao.update(userAndOj2);
+            userAndOj2.setAllContestNumber(x.getAllContestNumber());
+            userAndOj2.setRecentContestNumber(x.getRecentContestNumber());
+            userAndOj2List.add(userAndOj2);
+        });
+        log.info("执行落库");
+        userAndOj2Dao.updateByList(userAndOj2List);
     }
 
 }

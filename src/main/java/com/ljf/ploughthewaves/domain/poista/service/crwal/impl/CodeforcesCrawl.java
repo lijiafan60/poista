@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.model.res.ContestCrawlRes;
-import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.Crawl;
 import com.ljf.ploughthewaves.domain.poista.service.util.OkHttpApi;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Date;
 
 
 @Slf4j
@@ -32,6 +32,7 @@ public class CodeforcesCrawl implements Crawl {
         String run = okHttpApi.run("https://codeforces.com/api/user.rating?handle=" + crawlReq.getOjUsername());
         if(JSONObject.parseObject(run).getString("status").equals("FAILED")){
             log.error("用户{}的 {} {} 不存在",crawlReq.getUid(),crawlReq.getOjType(),crawlReq.getOjUsername());
+            codeforces.setUpdTime(new Date());
             return codeforces;
         }
 
@@ -71,7 +72,7 @@ public class CodeforcesCrawl implements Crawl {
         }
 
         codeforces.setAllSolvedNumber(allSolvedNumber);
-
+        codeforces.setUpdTime(new Date());
         return codeforces;
     }
 }

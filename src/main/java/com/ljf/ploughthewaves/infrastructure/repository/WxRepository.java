@@ -1,5 +1,10 @@
 package com.ljf.ploughthewaves.infrastructure.repository;
 
+import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
+import com.ljf.ploughthewaves.domain.poista.model.res.ContestCrawlRes;
+import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
+import com.ljf.ploughthewaves.domain.poista.repository.IDoCrawlRepository;
+import com.ljf.ploughthewaves.domain.poista.service.crwal.CrawlFactory;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
@@ -13,7 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +35,10 @@ public class WxRepository implements IWxRepository {
     private UserAndOj1Dao userAndOj1Dao;
     @Resource
     private UserAndOj2Dao userAndOj2Dao;
-
+    @Resource
+    private IDoCrawlRepository doCrawlRepository;
+    @Resource
+    private CrawlFactory crawlFactory;
     /**
      * 用户订阅时添加用户
      * @param openid
@@ -63,9 +74,33 @@ public class WxRepository implements IWxRepository {
      */
     @Override
     public void updateStatisticsInfo(String openid) {
-        User user = new User();
-        user.setOpenId(openid);
-        userDao.update(user);
+        log.info("根据openid查询出crawlReq");
+        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByOpenid(openid);
+        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByOpenid(openid);
+        //todo mq
+        log.info("根据crawlReqList,DoCrawl中");
+        final List<CrawlRes> res1 = new ArrayList<>();
+        final List<ContestCrawlRes> res2 = new ArrayList<>();
+        list1.stream().forEach(x -> {
+            try {
+                res1.add((CrawlRes) crawlFactory.crawlConfig.get(x.ojType).doCrawl(x));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        log.info("list1,DoCrawl成功");
+        list2.stream().forEach(x -> {
+            try {
+                res2.add((ContestCrawlRes) crawlFactory.crawlConfig.get(x.ojType).doCrawl(x));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        log.info("list2,DoCrawl成功");
+        log.info("将更新结果入库");
+        doCrawlRepository.updateOj1(res1);
+        doCrawlRepository.updateOj2(res2);
+        log.info("落库成功");
     }
 
     /**
@@ -110,6 +145,7 @@ public class WxRepository implements IWxRepository {
         userAndOj1.setOjUsername(ojUsername);
         Integer uid = userDao.queryUserIdByOpenId(openid);
         userAndOj1.setUid(uid);
+        userAndOj1.setAllSolvedNumber(0);
         userAndOj1Dao.insert(userAndOj1);
         log.info("{}插入成功",openid);
     }
@@ -139,6 +175,13 @@ public class WxRepository implements IWxRepository {
         userAndOj2.setOjUsername(ojUsername);
         Integer uid = userDao.queryUserIdByOpenId(openid);
         userAndOj2.setUid(uid);
+        userAndOj2.setAllSolvedNumber(0);
+        userAndOj2.setRecentSolvedNumber(0);
+        userAndOj2.setAllContestNumber(0);
+        userAndOj2.setRecentContestNumber(0);
+        userAndOj2.setNowRating(0);
+        userAndOj2.setMaxRating(0);
+        userAndOj2.setRecentMaxRating(0);
         userAndOj2Dao.insert(userAndOj2);
         log.info("{}插入成功",openid);
     }
