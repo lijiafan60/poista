@@ -24,7 +24,7 @@ public class UpdStatisticsInfoFilter implements LogicFilter {
     public String filter(BehaviorMatter request) {
         log.info("{}正在更新统计情况",request.getOpenId());
         wxRepository.updateStatisticsInfo(request.getOpenId());
-        return "正在更新您的统计数据";
+        return "正在快马加鞭更新中......请稍等10s后进行查看";
     }
 
 }
