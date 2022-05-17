@@ -52,7 +52,7 @@ spring:
     username: root
     password: ygrythd1314
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/PloughTheWaves?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    url: jdbc:mysql://39.103.190.148:3306/ploughthewaves?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
     druid:
       # 连接池的配置信息
       # 初始化大小，最小，最大
