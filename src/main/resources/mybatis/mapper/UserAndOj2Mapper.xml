@@ -48,6 +48,10 @@
         from ploughthewaves.user join ploughthewaves.userandoj2 on user.id = userandoj2.uid
         where user.openid = #{openid};
     </select>
+    <select id="getCrawlReqList" resultMap="crawlReq">
+        select uid,ojtype,oj_username,all_solved_number,all_contest_number,upd_time
+        from ploughthewaves.userandoj2
+    </select>
 
     <update id="update" parameterType="com.ljf.ploughthewaves.infrastructure.po.UserAndOj2">
             update ploughthewaves.userandoj2

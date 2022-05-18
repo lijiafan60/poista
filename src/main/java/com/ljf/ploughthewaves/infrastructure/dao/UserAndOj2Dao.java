@@ -28,4 +28,6 @@ public interface UserAndOj2Dao {
     List<BindInfo> getBindInfo(String openid);
 
     List<CrawlReq> getCrawlReqListByOpenid(String openid);
+
+    List<CrawlReq> getCrawlReqList();
 }

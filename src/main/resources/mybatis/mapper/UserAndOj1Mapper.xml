@@ -46,10 +46,15 @@
         from ploughthewaves.user join ploughthewaves.userandoj1 on user.id = userandoj1.uid
         where user.openid = #{openid};
     </select>
+    <select id="getCrawlReqList" resultMap="crawlReq">
+        select uid,ojtype,oj_username,all_solved_number,upd_time
+        from ploughthewaves.userandoj1
+    </select>
 
     <update id="update" parameterType="com.ljf.ploughthewaves.infrastructure.po.UserAndOj1">
             update ploughthewaves.userandoj1
             set all_solved_number = #{allSolvedNumber}, upd_time = #{updTime}
             where uid = #{uid} and ojtype = #{ojType} and oj_username = #{ojUsername}
     </update>
+
 </mapper>

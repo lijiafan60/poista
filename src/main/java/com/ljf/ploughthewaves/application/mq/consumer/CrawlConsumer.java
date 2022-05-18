@@ -32,9 +32,6 @@ public class CrawlConsumer {
     public CrawlFactory crawlFactory;
 
     @Resource
-    public UserAndOj1Dao userAndOj1Dao;
-
-    @Resource
     public IDoCrawlRepository doCrawlRepository;
 
     @KafkaListener(topics = "crawl",groupId = "docrawl")
@@ -58,6 +55,7 @@ public class CrawlConsumer {
             }
 
             ack.acknowledge();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

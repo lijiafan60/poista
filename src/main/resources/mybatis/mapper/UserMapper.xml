@@ -24,4 +24,9 @@
         set name = #{name} , school = #{school} , ispublic = #{isPublic}
         where openid = #{openId};
     </update>
+
+    <select id="queryAllUser" resultType="Integer">
+        select id
+        from ploughthewaves.user
+    </select>
 </mapper>

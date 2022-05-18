@@ -4,6 +4,7 @@ import com.ljf.ploughthewaves.infrastructure.po.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.ListIterator;
 
 @Mapper
 public interface UserDao {
@@ -13,6 +14,8 @@ public interface UserDao {
     List<User> queryUserBySchool(String school);
 
     List<Integer> queryUserIdBySchool(String school);
+
+    List<Integer> queryAllUser();
 
     Integer queryUserIdByOpenId(String openid);
 
