@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 @Slf4j
 @Component
 public class KafkaProducer {
+
     @Resource
     private KafkaTemplate<String, Object> kafkaTemplate;
 
