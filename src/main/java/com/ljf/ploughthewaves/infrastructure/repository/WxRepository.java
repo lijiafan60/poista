@@ -91,11 +91,13 @@ public class WxRepository implements IWxRepository {
             future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
                 @Override
                 public void onFailure(Throwable ex) {
+                    //todo 任务入库
                     log.info("发送mq失败");
                 }
 
                 @Override
                 public void onSuccess(SendResult<String, Object> result) {
+                    //todo 任务入库
                     log.info("发送mq成功");
                 }
             });
