@@ -36,7 +36,10 @@ public class EngineConfig {
     private UnsubscribeFilter unsubscribeFilter;
 
     @Resource
-    private GetAllBindInfo getAllBindInfo;
+    private GetAllBindInfoFilter getAllBindInfoFilter;
+
+    @Resource
+    private GetOpenidFilter getOpenidFilter;
 
     protected static Map<String, Map<String, LogicFilter>> logicFilterMap = new HashMap<>();
 
@@ -50,7 +53,8 @@ public class EngineConfig {
                 put("2",getStatisticsInfoFilter);
                 put("3",updStatisticsInfoFilter);
                 put("4",setDetailInfoFilter);
-                put("5",getAllBindInfo);
+                put("5", getAllBindInfoFilter);
+                put("6",getOpenidFilter);
             }
         });
 

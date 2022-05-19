@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ljf.ploughthewaves.infrastructure.dao.UserDao">
     <insert id="insert" parameterType="com.ljf.ploughthewaves.infrastructure.po.User">
-        insert into ploughthewaves.user(id, openid, name, school, ispublic, isadmin)
-        value (#{id},#{openId},#{name},#{school},#{isPublic},#{isAdmin});
+        insert into ploughthewaves.user(id, openid, name, school, ispublic, isadmin, role)
+        value (#{id},#{openId},#{name},#{school},#{isPublic},#{isAdmin},#{role});
     </insert>
 
     <select id="queryUserIdByOpenId" parameterType="String" resultType="Integer">
@@ -28,5 +28,21 @@
     <select id="queryAllUser" resultType="Integer">
         select id
         from ploughthewaves.user
+    </select>
+
+    <resultMap id="user" type="com.ljf.ploughthewaves.infrastructure.po.User">
+        <result property="id" column="id"/>
+        <result property="openId" column="openid"/>
+        <result property="name" column="name"/>
+        <result property="school" column="school"/>
+        <result property="isPublic" column="ispublic"/>
+        <result property="isAdmin" column="isadmin"/>
+        <result property="role" column="role"/>
+        <result property="password" column="password"/>
+    </resultMap>
+    <select id="queryUserByOpenid" resultMap="user" parameterType="String">
+        select id, openid, name, school, ispublic, isadmin, role, password
+        from ploughthewaves.user
+        where openid = #{openid};
     </select>
 </mapper>

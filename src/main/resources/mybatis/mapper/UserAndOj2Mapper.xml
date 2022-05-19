@@ -6,7 +6,7 @@
 
     <insert id="insert" parameterType="com.ljf.ploughthewaves.infrastructure.po.UserAndOj2">
         insert into ploughthewaves.userandoj2(id, ojtype, uid, oj_username, now_rating, max_rating, recent_max_rating, all_solved_number, recent_solved_number, all_contest_number, recent_contest_number, upd_time)
-        value (#{id},#{ojType},#{uid},#{ojUsername},#{nowRating},#{maxRating},#{recentMaxRating},#{allSolvedNumber},#{recentSolvedNumber},#{allContestNumber},#{recentContestNumber},#{updTime});
+        value (#{id},#{ojType},#{uid},#{ojUsername},#{nowRating},#{maxRating},#{recentMaxRating},#{allSolvedNumber},#{recentSolvedNumber},#{allContestNumber},#{recentContestNumber},now());
     </insert>
 
     <delete id="deleteByUid" parameterType="Integer">
@@ -62,7 +62,28 @@
                 recent_solved_number = #{recentSolvedNumber},
                 all_contest_number = #{allContestNumber},
                 recent_contest_number = #{recentContestNumber},
-                upd_time = #{updTime}
+                upd_time = now()
             where uid = #{uid} and ojtype = #{ojType} and oj_username = #{ojUsername}
     </update>
+
+    <resultMap id="userAndOj2" type="com.ljf.ploughthewaves.infrastructure.po.UserAndOj2">
+        <result column="uid" property="uid"/>
+        <result column="name" property="name"/>
+        <result column="ojtype" property="ojType"/>
+        <result column="oj_username" property="ojUsername"/>
+        <result column="now_rating" property="nowRating"/>
+        <result column="max_rating" property="maxRating"/>
+        <result column="recent_max_rating" property="recentMaxRating"/>
+        <result column="all_solved_number" property="allSolvedNumber"/>
+        <result column="recent_solved_number" property="recentSolvedNumber"/>
+        <result column="all_contest_number" property="allContestNumber"/>
+        <result column="recent_contest_number" property="recentContestNumber"/>
+        <result column="upd_time" property="updTime"/>
+    </resultMap>
+    <select id="getStuInfo" parameterType="String" resultMap="userAndOj2">
+        select uid,name,ojtype,  oj_username, now_rating, max_rating, recent_max_rating,
+               all_solved_number, recent_solved_number, all_contest_number, recent_contest_number, upd_time
+        from ploughthewaves.user join ploughthewaves.userandoj2 on user.id = userandoj2.uid
+        where user.school = #{school}
+    </select>
 </mapper>

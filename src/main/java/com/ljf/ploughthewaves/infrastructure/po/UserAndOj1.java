@@ -11,9 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserAndOj1 {
-    public Integer id;
-    public Integer ojType;
     public Integer uid;
+    public String name;
+    public Integer ojType;
     public String ojUsername;
     public Integer allSolvedNumber;
     public Date updTime;

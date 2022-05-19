@@ -54,6 +54,7 @@ public class WxRepository implements IWxRepository {
         user.setOpenId(openid);
         user.setIsAdmin(false);
         user.setIsPublic(false);
+        user.setRole("ROLE_user");
         userDao.insert(user);
     }
 
@@ -86,7 +87,7 @@ public class WxRepository implements IWxRepository {
         /**
          * 发送mq
          */
-        for(CrawlReq crawlReq:list1) {
+        for(CrawlReq crawlReq : list1) {
             ListenableFuture<SendResult<String,Object>> future = kafkaProducer.sendCrawlReq(crawlReq);
             future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
                 @Override

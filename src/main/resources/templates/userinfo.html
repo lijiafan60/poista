@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>POISTA</title>
+    <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" href="../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="shortcut icon" href="../../images/favicon.png"/>
+</head>
+<body>
+<div class="container-scroller">
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="navbar-brand-wrapper d-flex justify-content-center">
+            <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                <a class="navbar-brand brand-logo" th:href="@{/}"><img src="../../images/logo.svg" alt="logo"/></a>
+                <a class="navbar-brand brand-logo-mini" th:href="@{/}"><img src="../../images/logo-mini.svg"
+                                                                               alt="logo"/></a>
+                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                    <span class="mdi mdi-sort-variant"></span>
+                </button>
+            </div>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <ul class="navbar-nav mr-lg-4 w-50">
+                <li class="nav-item nav-search d-none d-lg-block w-100">
+                    <div class="input-group">
+                        <input id="search_kw" type="text" class="form-control" placeholder="搜索用户" aria-label="search"
+                               aria-describedby="search"
+                               onkeydown='if(event.keyCode == 13){search.click()}'>
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="search">
+                                <i class="mdi mdi-magnify"></i>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item nav-profile dropdown">
+                    <div sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                            <span class="nav-profile-name" sec:Authentication="name"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                             aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" th:href="@{/myinfo}">
+                                <span class="mdi mdi-settings text-primary"></span>
+                                设置
+                            </a>
+                            <a class="dropdown-item" th:href="@{/logout}">
+                                <span class="mdi mdi-logout text-primary"></span>
+                                退出
+                            </a>
+                        </div>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/login}">
+                <span class="text-body">
+                  登录&nbsp;&nbsp;&nbsp;
+                </span>
+                        </a>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" th:href="@{/register}">
+                <span class="text-body">
+                  注册&nbsp;&nbsp;
+                </span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                <span class="mdi mdi-menu"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">
+                        <i class="mdi mdi-home menu-icon"></i>
+                        <span class="menu-title">主页</span>
+                    </a>
+                </li>
+                <li class="nav-item"sec:authorize="hasAuthority('ROLE_admin')">
+                    <a class="nav-link" th:href="@{/friends}">
+                        <i class="mdi mdi-account-group menu-icon"></i>
+                        <span class="menu-title">我的好友</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/myinfo}">
+                        <i class="mdi mdi-account menu-icon"></i>
+                        <span class="menu-title">我的信息</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                    <div id="firstdiv" class="col-12 grid-margin stretch-card" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="InputOJ">OJ</label>
+                                        <select class="form-control form-control-lg" id="InputOJ">
+                                            <option>vjudge</option>
+                                            <option>nowcoder</option>
+                                            <option>codeforces</option>
+                                            <option>atcoder</option>
+                                            <option>spoj</option>
+                                            <option>poj</option>
+                                            <option>loj</option>
+                                            <option>zoj</option>
+                                            <option>uoj</option>
+                                            <option>uva</option>
+                                            <option>timus</option>
+                                            <option>topcoder</option>
+                                            <option>codechef</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="Inputname">用户名</label>
+                                        <input type="text" class="form-control" id="Inputname">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2" id="bindsubmit">提交</button>
+                                    <button class="btn btn-light" onclick="miss()">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="seconddiv" class="col-12 grid-margin stretch-card" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="cfInputOJ">OJ</label>
+                                        <input type="text" class="form-control" id="cfInputOJ" placeholder="codeforces"
+                                               readonly="readonly">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cfInputname">用户名</label>
+                                        <input type="text" class="form-control" id="cfInputname">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2" id="cfbindsubmit">提交</button>
+                                    <button class="btn btn-light" onclick="cfmiss()">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="thirddiv" class="col-12 grid-margin stretch-card" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="acInputOJ">OJ</label>
+                                        <input type="text" class="form-control" id="acInputOJ" placeholder="atcoder"
+                                               readonly="readonly">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="acInputname">用户名</label>
+                                        <input type="text" class="form-control" id="acInputname">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2" id="acbindsubmit">提交</button>
+                                    <button class="btn btn-light" onclick="acmiss()">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="forthdiv" class="col-12 grid-margin stretch-card" style="display: none">
+                        <div class="card">
+                            <div class="card-header">
+                                <p> 已关联的OJ： </p>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-dark">
+                                    <ul class="list-ticked" id="ojlist">
+                                    </ul>
+                                </div>
+                                <div class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="updOjInput">OJ</label>
+                                        <select class="form-control form-control-lg" id="updOjInput">
+                                            <option>vjudge</option>
+                                            <option>nowcoder</option>
+                                            <option>codeforces</option>
+                                            <option>atcoder</option>
+                                            <option>spoj</option>
+                                            <option>poj</option>
+                                            <option>loj</option>
+                                            <option>zoj</option>
+                                            <option>uoj</option>
+                                            <option>uva</option>
+                                            <option>timus</option>
+                                            <option>topcoder</option>
+                                            <option>codechef</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="updNameInput">用户名</label>
+                                        <input type="text" class="form-control" id="updNameInput">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2" id="updbindsubmit">删除</button>
+                                    <button class="btn btn-light" onclick="updmiss()">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="template-demo d-flex justify-content-between flex-nowrap">
+                                    <button type="button" class="btn btn-info btn-sm btn-block" onclick="letdisplay()">
+                                        关联OJ
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-sm btn-block" id="showoj">
+                                        查看关联的OJ
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-sm btn-block"
+                                            onclick="cfletdisplay()">
+                                        绑定codeforces
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-sm btn-block"
+                                            onclick="acletdisplay()">
+                                        绑定atcoder
+                                    </button>
+                                    <button id="updatept" type="button" class="btn btn-info btn-sm btn-block">
+                                        更新pt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="template-demo d-flex justify-content-between flex-nowrap">
+                                    <h3 id="username"></h3>
+                                    <hr>
+                                </div>
+                                <div class="template-demo d-flex justify-content-between flex-nowrap">
+                                    <table class="dl-table lef">
+                                        <tbody>
+                                        <tr>
+                                            <th class="no-break">codeforces</th>
+                                            <td id="cf"></td>
+                                        </tr>
+<!--                                        <tr>-->
+<!--                                            <th class="no-break">Rating</th>-->
+<!--                                            <td id="cfrating"></td>-->
+<!--                                        </tr>-->
+                                        <tr>
+                                            <th>atcoder</th>
+                                            <td id="ac"></td>
+                                        </tr>
+<!--                                        <tr>-->
+<!--                                            <th class="no-break">Rating</th>-->
+<!--                                            <td id="acrating"></td>-->
+<!--                                        </tr>-->
+                                        <tr>
+                                            <th>刷题数</th>
+                                            <td id="solvednum"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>PT</th>
+                                            <td id="pt"> 0</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted text-center text-sm-center d-block d-sm-inline-block">POISTA &copy; 2022</span>
+                </div>
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <a class="text-muted text-center text-sm-center d-block d-sm-inline-block" href="https://beian.miit.gov.cn/" target="_blank" >苏ICP备案2021053990号-1</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+<script src="../../vendors/base/vendor.bundle.base.js"></script>
+<script src="../../vendors/chart.js/Chart.min.js"></script>
+<script src="../../vendors/datatables.net/jquery.dataTables.js"></script>
+<script src="../../vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="../../js/off-canvas.js"></script>
+<script src="../../js/hoverable-collapse.js"></script>
+<script src="../../js/template.js"></script>
+<script src="../../js/dashboard.js"></script>
+<script src="../../js/data-table.js"></script>
+<script src="../../js/jquery.dataTables.js"></script>
+<script src="../../js/dataTables.bootstrap4.js"></script>
+<script src="../../js/jquery-3.5.1.js"></script>
+<script>
+    $(function () {
+        var name;
+        $.post({
+            url:"/getusername",
+            async:false,
+            success : function (msg) {
+                name = msg;
+            }
+        })
+        $.post({
+            url: "/getuserinfo/" + name,
+            success: function (data) {
+                $("#username").html(name);
+                $("#pt").html(data.pt);
+                if (data.cfName == null) $("#cf").html("未绑定codeforces账号")
+                else $("#cf").html(data.cfName);
+                if (data.acName == null) $("#ac").html("未绑定atcoder账号")
+                else $("#ac").html(data.acName);
+                $("#solvednum").html(data.allSolvedNumber);
+            }
+        });
+        $("#bindsubmit").click(function () {
+            $.post({
+                url: "/setOjInfo/" + $("#InputOJ").val() + "/" + $("#Inputname").val(),
+                success: function (msg) {
+                    if (msg == "-1") alert("OJ名或用户名错误!");
+                    else if (msg == "-2") alert("请先登录！");
+                    else if (msg == "1") alert("添加成功！");
+                    miss();
+                }
+            })
+        })
+        $("#cfbindsubmit").click(function () {
+            $.post({
+                url: "/setCfInfo/" + $("#cfInputname").val(),
+                success: function (msg) {
+                    if (msg == "-1") alert("OJ名或用户名错误!");
+                    else if (msg == "-2") alert("请先登录！");
+                    else if (msg == "1") alert("添加成功！");
+                    cfmiss();
+                }
+            })
+        })
+        $("#acbindsubmit").click(function () {
+            $.post({
+                url: "/setAcInfo/" + $("#acInputname").val(),
+                success: function (msg) {
+                    if (msg == "-1") alert("OJ名或用户名错误!");
+                    else if (msg == "-2") alert("请先登录！");
+                    else if (msg == "1") alert("添加成功！");
+                    acmiss();
+                }
+            })
+        })
+        $("#search_kw").keyup(function () {
+            $.post({
+                url: "findUserByVagueName/" + $("#search_kw").val(),
+                success: function (msg) {
+                    if(msg.length == 0) $("#search_kw").css("color","red");
+                    else $("#search_kw").css("color","green");
+                }
+            })
+        })
+        $("#search").click(function () {
+            $.post({
+                url:"findUserByName/" + $("#search_kw").val(),
+                success: function (msg) {
+                    console.log(msg);
+                    if(msg == "") alert("用户名错误！");
+                    else {
+                        window.location.href = "Profile/" + $("#search_kw").val();
+                    }
+                }
+            })
+        })
+        $("#updbindsubmit").click(function () {
+            $.post({
+                url:"deleteOjInfo/" + name + "/" + $("#updOjInput").val() + "/" + $("#updNameInput").val(),
+                success: function (msg) {
+                    console.log(msg);
+                    if(msg == 1) alert("删除成功！");
+                    else if(msg == 0) alert("用户名错误！");
+                }
+            })
+            location.reload();
+        })
+        $("#updatept").click(function () {
+            $.post({
+                url: "/updatept/" + name,
+                success(msg) {
+                    location.reload();
+                }
+            })
+            var num = 30;
+            $("#updatept").text(num + 's');
+            $("#updatept").attr('disabled','true');
+            $("#updatept").css('cursor','auto');
+            var interval = setInterval(function () {
+                num--;
+                if(num < 0) {
+                    $("#updatept").text("更新pt");
+                    $("#updatept").removeAttr('disabled');
+                    $("#updatept").css('cursor','pointer');
+                    clearInterval(interval);
+                } else {
+                    $("#updatept").text(num + 's');
+                }
+            } , 1000);
+        })
+        $("#showoj").click(function (){
+            $("#forthdiv").css("display","block");
+            $.post({
+                url:"queryojinfo/" + name,
+                success : function (msg) {
+                    $.each(msg,function (i,o){
+                        $("#ojlist").append( "<li>" + o.ojName + ":" + o.ojUsername + "</li>" )
+                    })
+                }
+            })
+        })
+    })
+    function letdisplay() {
+        $("#firstdiv").css("display", "block");
+    }
+
+    function miss() {
+        $("#firstdiv").css("display", "none");
+    }
+
+    function cfletdisplay() {
+        $("#seconddiv").css("display", "block");
+    }
+
+    function cfmiss() {
+        $("#seconddiv").css("display", "none");
+    }
+    function acletdisplay() {
+        $("#thirddiv").css("display", "block");
+    }
+
+    function acmiss() {
+        $("#thirddiv").css("display", "none");
+    }
+
+    function updmiss() {
+        $("#forthdiv").css("display","none");
+    }
+
+</script>
+</body>
+
+</html>
+

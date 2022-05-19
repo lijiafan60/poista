@@ -24,4 +24,6 @@ public interface UserDao {
     void update(User user);
 
     void setDetailInfo(User user);
+
+    User queryUserByOpenid(String openid);
 }

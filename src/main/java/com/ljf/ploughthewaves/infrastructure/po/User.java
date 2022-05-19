@@ -14,4 +14,6 @@ public class User {
     public String school;
     public Boolean isPublic;
     public Boolean isAdmin;
+    public String role;
+    public String password;
 }
