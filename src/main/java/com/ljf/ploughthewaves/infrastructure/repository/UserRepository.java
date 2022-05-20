@@ -1,6 +1,7 @@
 package com.ljf.ploughthewaves.infrastructure.repository;
 
 import com.ljf.ploughthewaves.application.mq.producer.KafkaProducer;
+import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
@@ -45,13 +46,13 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public List<CrawlReq> getStuCrawlReq(String openid) {
-        final List<CrawlReq> crawlReqList = new ArrayList<>();
+        List<CrawlReq> crawlReqList = new ArrayList<>();
         String school = userDao.queryUserByOpenid(openid).getSchool();
         List<User> userList = userDao.queryUserBySchool(school);
-        userList.stream().forEach(x -> {
+        for(User x : userList) {
             crawlReqList.addAll(userAndOj1Dao.getCrawlReqListByOpenid(x.getOpenId()));
             crawlReqList.addAll(userAndOj2Dao.getCrawlReqListByOpenid(x.getOpenId()));
-        });
+        }
         return crawlReqList;
     }
 
@@ -134,6 +135,43 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void setStatisticsStrategy(Strategy strategy, String school) {
+        strategyDao.delStrategy(school);
         strategyDao.addStrategy(strategy,school);
+    }
+
+    @Override
+    public List<OjInfo> getStatisticsInfo(String openid) {
+        Integer id = userDao.queryUserIdByOpenId(openid);
+        List<UserAndOj1> userAndOj1List = userAndOj1Dao.queryByUserId(id);
+        List<UserAndOj2> userAndOj2List = userAndOj2Dao.queryByUserId(id);
+        List<OjInfo> ojInfoList = new ArrayList<>();
+        for(UserAndOj1 x : userAndOj1List) {
+            OjInfo ojInfo = new OjInfo();
+
+            ojInfo.setOjType(x.getOjType());
+            ojInfo.setOjUsername(x.getOjUsername());
+
+            ojInfo.setAllSolvedNumber(x.getAllSolvedNumber());
+
+            ojInfoList.add(ojInfo);
+        }
+        for(UserAndOj2 x : userAndOj2List) {
+            OjInfo ojInfo = new OjInfo();
+
+            ojInfo.setOjType(x.getOjType());
+            ojInfo.setOjUsername(x.getOjUsername());
+
+            ojInfo.setNowRating(x.getNowRating());
+            ojInfo.setMaxRating(x.getMaxRating());
+            ojInfo.setRecentMaxRating(x.getRecentMaxRating());
+
+            ojInfo.setAllContestNumber(x.getAllContestNumber());
+            ojInfo.setRecentContestNumber(x.getRecentContestNumber());
+
+            ojInfo.setAllSolvedNumber(x.getAllSolvedNumber());
+
+            ojInfoList.add(ojInfo);
+        }
+        return ojInfoList;
     }
 }

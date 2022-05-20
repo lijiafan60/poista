@@ -44,7 +44,6 @@ public class AdminController {
 
     /**
      * 设置统计策略
-     * @param school
      * @param openid
      * @param cfRating
      * @param cfMaxRating
@@ -57,13 +56,14 @@ public class AdminController {
      * @param allSolvedNumber
      * @return
      */
-    @PostMapping("/setStatisticsStrategy/{openid}/{school}")
-    public String setStatisticsStrategy(@PathVariable String school, @PathVariable String openid,
+    @PostMapping("/setStatisticsStrategy/{openid}")
+    public String setStatisticsStrategy (@PathVariable String openid,
                                         Double cfRating,Double cfMaxRating, Double cfRecentMaxRating,
                                         Double cfContestNumber, Double cfRecentContestNumber,
                                         Double acRating, Double acMaxRating, Double acContestNumber,
                                         Double allSolvedNumber) {
-        log.info("{}正在设置{}的统计策略为",openid,school);
+        String school = userDao.queryUserByOpenid(openid).getSchool();
+        log.info("{}正在设置{}的统计策略",openid,school);
         if(!userService.isAdmin(openid,school)) return "-1";
         log.info("{}用户在{}的管理员身份验证通过",openid,school);
         Strategy strategy = new Strategy();

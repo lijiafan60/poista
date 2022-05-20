@@ -25,7 +25,7 @@ public class AtcoderCrawl implements Crawl {
     private OkHttpApi okHttpApi;
 
     @Override
-    public ContestCrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
+    public synchronized ContestCrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
         ContestCrawlRes atcoder = new ContestCrawlRes();
 
         atcoder.setUid(crawlReq.getUid());
@@ -74,6 +74,7 @@ public class AtcoderCrawl implements Crawl {
 
         atcoder.setAllContestNumber(Integer.parseInt(el.get(0).select("td").get(0).text()));
         atcoder.setUpdTime(new Date());
+
         return atcoder;
     }
 }

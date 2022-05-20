@@ -92,9 +92,9 @@
                     </a>
                 </li>
                 <li class="nav-item"sec:authorize="hasAuthority('ROLE_admin')">
-                    <a class="nav-link" th:href="@{/friends}">
+                    <a class="nav-link" th:href="@{/stupool}">
                         <i class="mdi mdi-account-group menu-icon"></i>
-                        <span class="menu-title">我的好友</span>
+                        <span class="menu-title">学生池</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -109,133 +109,10 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="row">
-                    <div id="firstdiv" class="col-12 grid-margin stretch-card" style="display: none">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="forms-sample">
-                                    <div class="form-group">
-                                        <label for="InputOJ">OJ</label>
-                                        <select class="form-control form-control-lg" id="InputOJ">
-                                            <option>vjudge</option>
-                                            <option>nowcoder</option>
-                                            <option>codeforces</option>
-                                            <option>atcoder</option>
-                                            <option>spoj</option>
-                                            <option>poj</option>
-                                            <option>loj</option>
-                                            <option>zoj</option>
-                                            <option>uoj</option>
-                                            <option>uva</option>
-                                            <option>timus</option>
-                                            <option>topcoder</option>
-                                            <option>codechef</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="Inputname">用户名</label>
-                                        <input type="text" class="form-control" id="Inputname">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mr-2" id="bindsubmit">提交</button>
-                                    <button class="btn btn-light" onclick="miss()">取消</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="seconddiv" class="col-12 grid-margin stretch-card" style="display: none">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="forms-sample">
-                                    <div class="form-group">
-                                        <label for="cfInputOJ">OJ</label>
-                                        <input type="text" class="form-control" id="cfInputOJ" placeholder="codeforces"
-                                               readonly="readonly">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cfInputname">用户名</label>
-                                        <input type="text" class="form-control" id="cfInputname">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mr-2" id="cfbindsubmit">提交</button>
-                                    <button class="btn btn-light" onclick="cfmiss()">取消</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="thirddiv" class="col-12 grid-margin stretch-card" style="display: none">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="forms-sample">
-                                    <div class="form-group">
-                                        <label for="acInputOJ">OJ</label>
-                                        <input type="text" class="form-control" id="acInputOJ" placeholder="atcoder"
-                                               readonly="readonly">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="acInputname">用户名</label>
-                                        <input type="text" class="form-control" id="acInputname">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mr-2" id="acbindsubmit">提交</button>
-                                    <button class="btn btn-light" onclick="acmiss()">取消</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="forthdiv" class="col-12 grid-margin stretch-card" style="display: none">
-                        <div class="card">
-                            <div class="card-header">
-                                <p> 已关联的OJ： </p>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-dark">
-                                    <ul class="list-ticked" id="ojlist">
-                                    </ul>
-                                </div>
-                                <div class="forms-sample">
-                                    <div class="form-group">
-                                        <label for="updOjInput">OJ</label>
-                                        <select class="form-control form-control-lg" id="updOjInput">
-                                            <option>vjudge</option>
-                                            <option>nowcoder</option>
-                                            <option>codeforces</option>
-                                            <option>atcoder</option>
-                                            <option>spoj</option>
-                                            <option>poj</option>
-                                            <option>loj</option>
-                                            <option>zoj</option>
-                                            <option>uoj</option>
-                                            <option>uva</option>
-                                            <option>timus</option>
-                                            <option>topcoder</option>
-                                            <option>codechef</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="updNameInput">用户名</label>
-                                        <input type="text" class="form-control" id="updNameInput">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mr-2" id="updbindsubmit">删除</button>
-                                    <button class="btn btn-light" onclick="updmiss()">取消</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <div class="template-demo d-flex justify-content-between flex-nowrap">
-                                    <button type="button" class="btn btn-info btn-sm btn-block" onclick="letdisplay()">
-                                        关联OJ
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-sm btn-block" id="showoj">
-                                        查看关联的OJ
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-sm btn-block"
-                                            onclick="cfletdisplay()">
-                                        绑定codeforces
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-sm btn-block"
-                                            onclick="acletdisplay()">
-                                        绑定atcoder
-                                    </button>
                                     <button id="updatept" type="button" class="btn btn-info btn-sm btn-block">
                                         更新pt
                                     </button>
@@ -246,40 +123,8 @@
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <div class="template-demo d-flex justify-content-between flex-nowrap">
-                                    <h3 id="username"></h3>
-                                    <hr>
-                                </div>
-                                <div class="template-demo d-flex justify-content-between flex-nowrap">
-                                    <table class="dl-table lef">
-                                        <tbody>
-                                        <tr>
-                                            <th class="no-break">codeforces</th>
-                                            <td id="cf"></td>
-                                        </tr>
-<!--                                        <tr>-->
-<!--                                            <th class="no-break">Rating</th>-->
-<!--                                            <td id="cfrating"></td>-->
-<!--                                        </tr>-->
-                                        <tr>
-                                            <th>atcoder</th>
-                                            <td id="ac"></td>
-                                        </tr>
-<!--                                        <tr>-->
-<!--                                            <th class="no-break">Rating</th>-->
-<!--                                            <td id="acrating"></td>-->
-<!--                                        </tr>-->
-                                        <tr>
-                                            <th>刷题数</th>
-                                            <td id="solvednum"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>PT</th>
-                                            <td id="pt"> 0</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -310,16 +155,12 @@
 <script src="../../js/jquery-3.5.1.js"></script>
 <script>
     $(function () {
-        var name;
+        var name = $("#authname").html();
         $.post({
-            url:"/getusername",
-            async:false,
-            success : function (msg) {
-                name = msg;
-            }
-        })
-        $.post({
-            url: "/getuserinfo/" + name,
+            url: "/user/getStatisticsInfo",
+            data: {
+                "openid": name
+            },
             success: function (data) {
                 $("#username").html(name);
                 $("#pt").html(data.pt);
@@ -330,71 +171,6 @@
                 $("#solvednum").html(data.allSolvedNumber);
             }
         });
-        $("#bindsubmit").click(function () {
-            $.post({
-                url: "/setOjInfo/" + $("#InputOJ").val() + "/" + $("#Inputname").val(),
-                success: function (msg) {
-                    if (msg == "-1") alert("OJ名或用户名错误!");
-                    else if (msg == "-2") alert("请先登录！");
-                    else if (msg == "1") alert("添加成功！");
-                    miss();
-                }
-            })
-        })
-        $("#cfbindsubmit").click(function () {
-            $.post({
-                url: "/setCfInfo/" + $("#cfInputname").val(),
-                success: function (msg) {
-                    if (msg == "-1") alert("OJ名或用户名错误!");
-                    else if (msg == "-2") alert("请先登录！");
-                    else if (msg == "1") alert("添加成功！");
-                    cfmiss();
-                }
-            })
-        })
-        $("#acbindsubmit").click(function () {
-            $.post({
-                url: "/setAcInfo/" + $("#acInputname").val(),
-                success: function (msg) {
-                    if (msg == "-1") alert("OJ名或用户名错误!");
-                    else if (msg == "-2") alert("请先登录！");
-                    else if (msg == "1") alert("添加成功！");
-                    acmiss();
-                }
-            })
-        })
-        $("#search_kw").keyup(function () {
-            $.post({
-                url: "findUserByVagueName/" + $("#search_kw").val(),
-                success: function (msg) {
-                    if(msg.length == 0) $("#search_kw").css("color","red");
-                    else $("#search_kw").css("color","green");
-                }
-            })
-        })
-        $("#search").click(function () {
-            $.post({
-                url:"findUserByName/" + $("#search_kw").val(),
-                success: function (msg) {
-                    console.log(msg);
-                    if(msg == "") alert("用户名错误！");
-                    else {
-                        window.location.href = "Profile/" + $("#search_kw").val();
-                    }
-                }
-            })
-        })
-        $("#updbindsubmit").click(function () {
-            $.post({
-                url:"deleteOjInfo/" + name + "/" + $("#updOjInput").val() + "/" + $("#updNameInput").val(),
-                success: function (msg) {
-                    console.log(msg);
-                    if(msg == 1) alert("删除成功！");
-                    else if(msg == 0) alert("用户名错误！");
-                }
-            })
-            location.reload();
-        })
         $("#updatept").click(function () {
             $.post({
                 url: "/updatept/" + name,
@@ -418,44 +194,8 @@
                 }
             } , 1000);
         })
-        $("#showoj").click(function (){
-            $("#forthdiv").css("display","block");
-            $.post({
-                url:"queryojinfo/" + name,
-                success : function (msg) {
-                    $.each(msg,function (i,o){
-                        $("#ojlist").append( "<li>" + o.ojName + ":" + o.ojUsername + "</li>" )
-                    })
-                }
-            })
-        })
+
     })
-    function letdisplay() {
-        $("#firstdiv").css("display", "block");
-    }
-
-    function miss() {
-        $("#firstdiv").css("display", "none");
-    }
-
-    function cfletdisplay() {
-        $("#seconddiv").css("display", "block");
-    }
-
-    function cfmiss() {
-        $("#seconddiv").css("display", "none");
-    }
-    function acletdisplay() {
-        $("#thirddiv").css("display", "block");
-    }
-
-    function acmiss() {
-        $("#thirddiv").css("display", "none");
-    }
-
-    function updmiss() {
-        $("#forthdiv").css("display","none");
-    }
 
 </script>
 </body>

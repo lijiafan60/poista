@@ -1,5 +1,6 @@
 package com.ljf.ploughthewaves.interfaces;
 
+import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -41,5 +43,10 @@ public class UserController {
     public String update(@RequestParam String openid) {
         userService.updateStatisticsInfo(openid);
         return null;
+    }
+
+    @PostMapping("/getStatisticsInfo")
+    public List<OjInfo> get(@RequestParam String openid) {
+        return userService.getStatisticsInfo(openid);
     }
 }

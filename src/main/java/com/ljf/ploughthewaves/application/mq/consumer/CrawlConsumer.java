@@ -40,7 +40,7 @@ public class CrawlConsumer {
         if(!message.isPresent()) {
             return;
         }
-
+        log.info("{}开始消费",Thread.currentThread().getName());
         //处理消息
         try {
             CrawlReq crawlReq = JSON.parseObject((String) message.get(), CrawlReq.class);
@@ -49,13 +49,18 @@ public class CrawlConsumer {
                 doCrawlRepository.updateOj1(res);
                 log.info("消费完成 : {}",res.toString());
             } else {
+                if(crawlReq.getOjType() == 0) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 ContestCrawlRes res = (ContestCrawlRes) crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq);
                 doCrawlRepository.updateOj2(res);
                 log.info("消费完成 : {}",res.toString());
             }
-
             ack.acknowledge();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

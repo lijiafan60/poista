@@ -20,7 +20,7 @@ public class VjudgeCrawl implements Crawl {
     private OkHttpApi okHttpApi;
 
     @Override
-    public CrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
+    public synchronized CrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
 
         CrawlRes vjudge = new CrawlRes();
 

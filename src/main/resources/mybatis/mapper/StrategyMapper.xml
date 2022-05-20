@@ -27,4 +27,9 @@
         from ploughthewaves.strategy
         where school = #{school}
     </select>
+
+    <delete id="delStrategy" parameterType="String">
+        delete from strategy
+        where school = #{school}
+    </delete>
 </mapper>

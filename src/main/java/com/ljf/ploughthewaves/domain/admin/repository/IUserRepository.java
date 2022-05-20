@@ -1,5 +1,6 @@
 package com.ljf.ploughthewaves.domain.admin.repository;
 
+import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.infrastructure.po.Strategy;
@@ -15,4 +16,5 @@ public interface IUserRepository {
     List<StuInfo> getStuInfo(String school);
     User getUserByOpenid(String openid);
     void setStatisticsStrategy(Strategy strategy, String school);
+    List<OjInfo> getStatisticsInfo(String openid);
 }

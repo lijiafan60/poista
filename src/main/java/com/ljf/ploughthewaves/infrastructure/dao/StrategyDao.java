@@ -9,5 +9,7 @@ public interface StrategyDao {
 
     void addStrategy(@Param("strategy") Strategy strategy, @Param("school") String school);
 
+    void delStrategy(String school);
+
     Strategy getStrategy(String school);
 }

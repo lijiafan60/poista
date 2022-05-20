@@ -22,7 +22,7 @@ public class CodeforcesCrawl implements Crawl {
     private OkHttpApi okHttpApi;
 
     @Override
-    public ContestCrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
+    public synchronized ContestCrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
         ContestCrawlRes codeforces = new ContestCrawlRes();
 
         codeforces.setUid(crawlReq.getUid());

@@ -109,6 +109,119 @@
             <div class="content-wrapper">
                 <div class="row">
                     <div class="col-12 grid-margin stretch-card">
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <button id="upd" class="btn btn-primary mt-2 mt-xl-0">更新</button>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <button id="excel" class="btn btn-primary mt-2 mt-xl-0">导出EXCEL</button>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="d-flex justify-content-between flex-wrap">
+                            <button id="strategy" class="btn btn-primary mt-2 mt-xl-0">设置统计策略</button>
+                        </div>
+                    </div>
+                    <div id="setStrategy" class="col-12 grid-margin stretch-card" style="display: none">
+                        <iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">统计策略</h4>
+                                <form id="strategyForm" class="form-sample" method="post" target="nm_iframe">
+                                    <p class="card-description">
+                                        填入每一项的比值
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CFRating</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="cfRating"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CF历史最高Rating</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="cfMaxRating"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CF30天内最高Rating</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="cfRecentMaxRating"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CF场次数</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="cfContestNumber"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CF30天内场次数</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="cfRecentContestNumber"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">ACRating</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="acRating"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">CF历史最高Rating</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="acMaxRating"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">AC场次数</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="acContestNumber"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">总刷题数</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="allSolvedNumber"/>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between flex-wrap">
+                                                <button id="strategySubmit" class="btn btn-primary mt-2 mt-xl-0">提交</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                         <div class="table-responsive">
                             <table class="table table-striped" >
@@ -162,6 +275,7 @@
 <script src="../../js/jquery-3.5.1.js"></script>
 <script>
     $(function (){
+        $("#strategyForm").attr("action","/admin/setStatisticsStrategy/" + $("#authname").html());
         $.post({
             url:"/admin/getStuInfo",
             data : {
@@ -189,6 +303,22 @@
                 })
             }
         })
+    })
+    $("#upd").click(function () {
+        $.post({
+            url: "/admin/updateStuStatisticsInfo/" + $("#authname").html(),
+            success: function (data) {
+                alert("快马加鞭更新中...请稍等10s后刷新");
+            }
+        })
+    });
+
+    $("#strategy").click(function () {
+        if($("#setStrategy").css("display") == 'none') $("#setStrategy").css("display" , "block");
+        else $("#setStrategy").css("display" , "none");
+    })
+    $("#strategySubmit").click(function () {
+        window.location.reload();
     })
 </script>
 </body>
