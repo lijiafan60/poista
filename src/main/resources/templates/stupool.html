@@ -30,8 +30,7 @@
                 <li class="nav-item nav-search d-none d-lg-block w-100">
                     <div class="input-group">
                         <input id="search_kw" type="text" class="form-control" placeholder="搜索用户" aria-label="search"
-                               aria-describedby="search"
-                               onkeydown='if(event.keyCode == 13){search.click()}'>
+                               aria-describedby="search">
                         <div class="input-group-append">
                             <span class="input-group-text" id="search">
                                 <i class="mdi mdi-magnify"></i>
@@ -94,7 +93,7 @@
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_admin')">
                     <a class="nav-link" th:href="@{/friends}">
                         <i class="mdi mdi-account-group menu-icon"></i>
-                        <span class="menu-title">我的好友</span>
+                        <span class="menu-title">学生池</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -115,13 +114,18 @@
                             <table class="table table-striped" >
                                 <thead>
                                 <tr>
-                                    <th>用户名</th>
+                                    <th>姓名</th>
                                     <th>CF_ID</th>
-                                    <th>场次数</th>
                                     <th>Rating</th>
+                                    <th>历史最高Rating</th>
+                                    <th>30天内最高Rating</th>
+                                    <th>场次数</th>
+                                    <th>30天内场次数</th>
                                     <th>AC_ID</th>
                                     <th>Rating</th>
-                                    <th>刷题数</th>
+                                    <th>历史最高Rating</th>
+                                    <th>场次数</th>
+                                    <th>总刷题数</th>
                                     <th>PT</th>
                                 </tr>
                                 </thead>
@@ -159,49 +163,31 @@
 <script>
     $(function (){
         $.post({
-            url:"/getusername",
-            success: function (username) {
-                $.post({
-                    url:"/findfriends/" + username,
-                    success: function (data) {
-                        $.each(data,function (i,ex) {
-                            var html =
-                                "<tr>" +
-                                "<td>" + ex.username + "</td>" +
-                                "<td>" + ex.cfName + "</td>" +
-                                "<td>" + ex.cfRecentContestNumber + "</td>" +
-                                "<td>" + ex.cfRecentHighestRating + "</td>" +
-                                "<td>" + ex.acName + "</td>" +
-                                "<td>" + ex.acRating + "</td>" +
-                                "<td>" + ex.allSolvedNumber + "</td>" +
-                                "<td>" + ex.pt + "</td>" +
-                                "</tr>";
-                            $("#content").append(html)
-                        })
-                    }
+            url:"/admin/getStuInfo",
+            data : {
+                "openid" : $("#authname").html()
+            },
+            success: function (data) {
+                $.each(data , function (i,ex) {
+                    var html =
+                        "<tr>" +
+                        "<td>" + ex.name + "</td>" +
+                        "<td>" + ex.cfName + "</td>" +
+                        "<td>" + ex.cfRating + "</td>" +
+                        "<td>" + ex.cfMaxRating + "</td>" +
+                        "<td>" + ex.cfRecentMaxRating + "</td>" +
+                        "<td>" + ex.cfContestNumber + "</td>" +
+                        "<td>" + ex.cfRecentContestNumber + "</td>" +
+                        "<td>" + ex.acName + "</td>" +
+                        "<td>" + ex.acRating + "</td>" +
+                        "<td>" + ex.acMaxRating + "</td>" +
+                        "<td>" + ex.acContestNumber + "</td>" +
+                        "<td>" + ex.allSolvedNumber + "</td>" +
+                        "<td>" + ex.pt + "</td>" +
+                        "</tr>";
+                    $("#content").append(html)
                 })
             }
-        })
-        $("#search_kw").keyup(function () {
-            $.post({
-                url: "findUserByVagueName/" + $("#search_kw").val(),
-                success: function (msg) {
-                    if(msg.length == 0) $("#search_kw").css("color","red");
-                    else $("#search_kw").css("color","green");
-                }
-            })
-        })
-        $("#search").click(function () {
-            $.post({
-                url:"findUserByName/" + $("#search_kw").val(),
-                success: function (msg) {
-                    console.log(msg);
-                    if(msg == "") alert("用户名错误！");
-                    else {
-                        window.location.href = "Profile/" + $("#search_kw").val();
-                    }
-                }
-            })
         })
     })
 </script>

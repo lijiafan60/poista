@@ -9,7 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StuInfo {
     public String name;
-    public String ojName;
-    public String ojUsername;
-    public Integer solvedNumber;
+    public String cfName;
+    public Integer cfRating;
+    public Integer cfMaxRating;
+    public Integer cfRecentMaxRating;
+    public Integer cfContestNumber;
+    public Integer cfRecentContestNumber;
+    public String acName;
+    public Integer acRating;
+    public Integer acMaxRating;
+    public Integer acContestNumber;
+    public Integer allSolvedNumber;
+    public Double pt;
 }

@@ -65,10 +65,14 @@
         <result column="all_solved_number" property="allSolvedNumber"/>
         <result column="upd_time" property="updTime"/>
     </resultMap>
-    <select id="getStuInfo" parameterType="String" resultMap="stuInfo">
+    <select id="getStuInfo" parameterType="String" resultMap="userAndOj1">
         select uid,name,ojtype,oj_username,all_solved_number,upd_time
         from ploughthewaves.user join ploughthewaves.userandoj1 on user.id = userandoj1.uid
         where user.school = #{school};
     </select>
-
+    <select id="queryByUserId" parameterType="Integer" resultMap="userAndOj1">
+        select ojtype, uid, oj_username, all_solved_number, upd_time
+        from ploughthewaves.userandoj1
+        where uid = #{id};
+    </select>
 </mapper>

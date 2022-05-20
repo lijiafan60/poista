@@ -5,9 +5,11 @@ import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
+import com.ljf.ploughthewaves.infrastructure.dao.StrategyDao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
+import com.ljf.ploughthewaves.infrastructure.po.Strategy;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
@@ -31,6 +33,8 @@ public class UserRepository implements IUserRepository {
     private UserAndOj1Dao userAndOj1Dao;
     @Resource
     private UserAndOj2Dao userAndOj2Dao;
+    @Resource
+    private StrategyDao strategyDao;
     @Resource
     private KafkaProducer kafkaProducer;
 
@@ -77,27 +81,59 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public List<StuInfo> getStuInfo(String openid) {
-        String school = userDao.queryUserByOpenid(openid).getSchool();
-        List<UserAndOj1> list1 = userAndOj1Dao.getStuInfo(school);
-        List<UserAndOj2> list2 = userAndOj2Dao.getStuInfo(school);
-        final List<StuInfo> stuInfoList = new ArrayList<>();
-        list1.stream().forEach(x -> {
-            StuInfo stu = new StuInfo();
-            stu.setName(x.getName());
-            stu.setOjUsername(x.getOjUsername());
-            stu.setOjName(OjFilter.TypeToName.get(x.getOjType()));
-            stu.setSolvedNumber(x.getAllSolvedNumber());
-            stuInfoList.add(stu);
-        });
-        list2.stream().forEach(x -> {
-            StuInfo stu = new StuInfo();
-            stu.setName(x.getName());
-            stu.setOjUsername(x.getOjUsername());
-            stu.setOjName(OjFilter.TypeToName.get(x.getOjType()));
-            stu.setSolvedNumber(x.getAllSolvedNumber());
-            stuInfoList.add(stu);
-        });
+    public List<StuInfo> getStuInfo(String school) {
+        List<User> userList = userDao.queryUserBySchool(school);
+        List<StuInfo> stuInfoList = new ArrayList<>();
+        for(User x : userList){
+            StuInfo stuInfo = new StuInfo();
+            stuInfo.setName(x.getName());
+
+            int cnt = 0;
+            List<UserAndOj1> l1 = userAndOj1Dao.queryByUserId(x.getId());
+            for (UserAndOj1 userAndOj1:l1) {
+                cnt += userAndOj1.getAllSolvedNumber();
+            }
+
+            List<UserAndOj2> l2 = userAndOj2Dao.queryByUserId(x.getId());
+            int cfRecentMaxRating = 0,acMaxRating = 0;
+            for (UserAndOj2 userAndOj2:l2) {
+                cnt += userAndOj2.getAllSolvedNumber();
+                int ojtype = userAndOj2.getOjType();
+                if(ojtype == 0) {
+                    if(userAndOj2.getRecentMaxRating() > cfRecentMaxRating) {
+                        cfRecentMaxRating = userAndOj2.getRecentMaxRating();
+                        stuInfo.setCfName(userAndOj2.getOjUsername());
+                        stuInfo.setCfRating(userAndOj2.getNowRating());
+                        stuInfo.setCfMaxRating(userAndOj2.getMaxRating());
+                        stuInfo.setCfRecentMaxRating(userAndOj2.getRecentMaxRating());
+                        stuInfo.setCfContestNumber(userAndOj2.getAllContestNumber());
+                        stuInfo.setCfRecentContestNumber(userAndOj2.getRecentContestNumber());
+                    }
+                } else {
+                    if(userAndOj2.getMaxRating() > acMaxRating) {
+                        acMaxRating = userAndOj2.getMaxRating();
+                        stuInfo.setAcName(userAndOj2.getOjUsername());
+                        stuInfo.setAcRating(userAndOj2.getNowRating());
+                        stuInfo.setAcMaxRating(userAndOj2.getMaxRating());
+                        stuInfo.setAcContestNumber(userAndOj2.getAllContestNumber());
+                    }
+                }
+            }
+
+            stuInfo.setAllSolvedNumber(cnt);
+
+            stuInfoList.add(stuInfo);
+        }
         return stuInfoList;
+    }
+
+    @Override
+    public User getUserByOpenid(String openid) {
+       return userDao.queryUserByOpenid(openid);
+    }
+
+    @Override
+    public void setStatisticsStrategy(Strategy strategy, String school) {
+        strategyDao.addStrategy(strategy,school);
     }
 }

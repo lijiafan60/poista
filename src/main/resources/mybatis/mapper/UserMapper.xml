@@ -45,4 +45,9 @@
         from ploughthewaves.user
         where openid = #{openid};
     </select>
+    <select id="queryUserBySchool" resultMap="user" parameterType="String">
+        select id, openid, name, school, ispublic, isadmin, role, password
+        from ploughthewaves.user
+        where school = #{school};
+    </select>
 </mapper>

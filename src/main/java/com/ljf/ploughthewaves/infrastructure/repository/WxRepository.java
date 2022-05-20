@@ -39,11 +39,8 @@ public class WxRepository implements IWxRepository {
     @Resource
     private UserAndOj2Dao userAndOj2Dao;
     @Resource
-    private IDoCrawlRepository doCrawlRepository;
-    @Resource
-    private CrawlFactory crawlFactory;
-    @Resource
     private KafkaProducer kafkaProducer;
+
     /**
      * 用户订阅时添加用户
      * @param openid
@@ -52,6 +49,7 @@ public class WxRepository implements IWxRepository {
     public void addUser(String openid) {
         User user = new User();
         user.setOpenId(openid);
+        user.setName(openid);
         user.setIsAdmin(false);
         user.setIsPublic(false);
         user.setRole("ROLE_user");
@@ -103,32 +101,6 @@ public class WxRepository implements IWxRepository {
                 }
             });
         }
-
-        /*
-        log.info("根据crawlReqList,DoCrawl中");
-        final List<CrawlRes> res1 = new ArrayList<>();
-        final List<ContestCrawlRes> res2 = new ArrayList<>();
-        list1.stream().forEach(x -> {
-            try {
-                res1.add((CrawlRes) crawlFactory.crawlConfig.get(x.ojType).doCrawl(x));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        log.info("list1,DoCrawl成功");
-        list2.stream().forEach(x -> {
-            try {
-                res2.add((ContestCrawlRes) crawlFactory.crawlConfig.get(x.ojType).doCrawl(x));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        log.info("list2,DoCrawl成功");
-        log.info("将更新结果入库");
-        doCrawlRepository.updateOj1(res1);
-        doCrawlRepository.updateOj2(res2);
-        log.info("落库成功");
-         */
     }
 
     /**

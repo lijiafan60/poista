@@ -1,6 +1,7 @@
 package com.ljf.ploughthewaves.interfaces;
 
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
+import com.ljf.ploughthewaves.domain.admin.service.UserService;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class UserController {
     private SolvedNumbersApi solvedNumbersApi;
 
     @Resource
-    private IUserRepository userRepository;
+    private UserService userService;
 
     /**
      * 匿名用户获取刷题数
@@ -38,7 +39,7 @@ public class UserController {
      */
     @PostMapping("/updateStatisticsInfo")
     public String update(@RequestParam String openid) {
-        userRepository.updateStatisticsInfo(openid);
+        userService.updateStatisticsInfo(openid);
         return null;
     }
 }

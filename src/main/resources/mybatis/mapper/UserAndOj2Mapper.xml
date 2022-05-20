@@ -86,4 +86,9 @@
         from ploughthewaves.user join ploughthewaves.userandoj2 on user.id = userandoj2.uid
         where user.school = #{school}
     </select>
+    <select id="queryByUserId" parameterType="Integer" resultMap="userAndOj2">
+        select ojtype, uid, oj_username, now_rating, max_rating, recent_max_rating, all_solved_number, recent_solved_number, all_contest_number, recent_contest_number, upd_time
+        from ploughthewaves.userandoj2
+        where uid = #{id};
+    </select>
 </mapper>

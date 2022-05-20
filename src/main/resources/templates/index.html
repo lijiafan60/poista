@@ -33,8 +33,7 @@
                 <li class="nav-item nav-search d-none d-lg-block w-100">
                     <div class="input-group">
                         <input id="search_kw" type="text" class="form-control" placeholder="搜索用户" aria-label="search"
-                               aria-describedby="search"
-                                onkeydown='if(event.keyCode == 13){search.click()}'>
+                               aria-describedby="search">
                         <div class="input-group-append">
                             <span class="input-group-text" id="search">
                                 <i class="mdi mdi-magnify"></i>
@@ -120,12 +119,6 @@
                                     <h2>OJ刷题数查询</h2>
                                 </div>
                             </div>
-<!--                            <div class="d-flex justify-content-between align-items-end flex-wrap">-->
-<!--                                <button type="button" class="btn btn-light bg-white btn-icon mr-3 mt-2 mt-xl-0">-->
-<!--                                    <i class="mdi mdi-plus text-muted"></i>-->
-<!--                                </button>-->
-<!--                                <button class="btn btn-primary mt-2 mt-xl-0">Download report</button>-->
-<!--                            </div>-->
                         </div>
                     </div>
                     <div class="col-12 grid-margin stretch-card" id="adddiv">
@@ -226,27 +219,6 @@
         })
     });
 
-    $("#search_kw").keyup(function () {
-        $.post({
-            url: "findUserByVagueName/" + $("#search_kw").val(),
-            success: function (msg) {
-                if(msg.length == 0) $("#search_kw").css("color","red");
-                else $("#search_kw").css("color","green");
-            }
-        })
-    })
-    $("#search").click(function () {
-        $.post({
-            url:"findUserByName/" + $("#search_kw").val(),
-            success: function (msg) {
-                console.log(msg);
-                if(msg == "") alert("用户名错误！");
-                else {
-                    window.location.href = "Profile/" + $("#search_kw").val();
-                }
-            }
-        })
-    })
 </script>
 </body>
 

@@ -49,7 +49,6 @@ public class AtcoderCrawl implements Crawl {
         nowTimeSeconds -= 2592000;
         run = okHttpApi.run("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + crawlReq.getOjUsername() + "&from_second=" + nowTimeSeconds);
         JSONArray jsonArray = JSON.parseArray(run);
-        System.out.println(jsonArray.size());
         List<String> acList = new LinkedList<>();
         for(int i=0;i<jsonArray.size();i++) {
             if (jsonArray.getJSONObject(i).getString("result").equals("AC")) {
@@ -58,6 +57,7 @@ public class AtcoderCrawl implements Crawl {
         }
         Set<String> acSet = new HashSet<>(acList);
         atcoder.setRecentSolvedNumber(acSet.size());
+
         /**
          * 爬取atcoder网页
          */
