@@ -56,6 +56,10 @@
                                 <span class="mdi mdi-logout text-primary"></span>
                                 退出
                             </a>
+                            <a class="dropdown-item" th:href="@{/modifypwd}">
+                                <span class="mdi mdi-logout text-primary"></span>
+                                修改密码
+                            </a>
                         </div>
                     </div>
                     <div sec:authorize="!isAuthenticated()">
@@ -171,7 +175,7 @@
                         html += "<small class=\"text-muted\">" + ex.allContestNumber + "</small> </h5>"
                     }
                     if(ex.recentContestNumber != null) {
-                        html += "<h5> 30天内Rating场次";
+                        html += "<h5> 30天内Rating场次 : ";
                         html += "<small class=\"text-muted\">" + ex.recentContestNumber + "</small> </h5>"
                     }
                     if(ex.allSolvedNumber != null) {

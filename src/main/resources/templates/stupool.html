@@ -55,6 +55,10 @@
                                 <span class="mdi mdi-logout text-primary"></span>
                                 退出
                             </a>
+                            <a class="dropdown-item" th:href="@{/modifypwd}">
+                                <span class="mdi mdi-logout text-primary"></span>
+                                修改密码
+                            </a>
                         </div>
                     </div>
                     <div sec:authorize="!isAuthenticated()">
@@ -91,7 +95,7 @@
                     </a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ROLE_admin')">
-                    <a class="nav-link" th:href="@{/friends}">
+                    <a class="nav-link" th:href="@{/stupool}">
                         <i class="mdi mdi-account-group menu-icon"></i>
                         <span class="menu-title">学生池</span>
                     </a>
@@ -310,7 +314,7 @@
         $.post({
             url: "/admin/updateStuStatisticsInfo/" + $("#authname").html(),
             success: function (data) {
-                alert("快马加鞭更新中...请稍等10s后刷新");
+                alert("快马加鞭更新中...请不要频繁刷新");
             }
         })
         let num = 30;

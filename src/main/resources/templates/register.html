@@ -21,6 +21,7 @@
                         <div class="brand-logo">
                             <img src="../../images/logo.svg" alt="logo">
                         </div>
+                        <h4>注册</h4>
                         <div class="pt-3">
                             <div class="form-group">
                                 <input id="name" type="text" class="form-control form-control-lg" placeholder="用户名">
@@ -69,7 +70,7 @@
             else if($("#pwd1").val() == $("#pwd2").val())
             {
                 $.post({
-                    url:"/user/register/" + $("#name").val() + "/" + $("#pwd1").val(),
+                    url:"/user/register",
                     data: {
                         "openid" : $("#name").val(),
                         "password" : $("#pwd1").val()
@@ -79,6 +80,7 @@
                             window.location.href = "/login";
                         }
                         else if(msg == -1) alert("用户名错误");
+                        else if(msg == -2) alert("该用户名已经注册过了");
                     }
                 })
             }

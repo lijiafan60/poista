@@ -11,7 +11,7 @@ public class ViewController {
     }
 
     @RequestMapping("/register")
-    public String Toregist() {
+    public String toRegister() {
         return "register";
     }
 
@@ -23,5 +23,10 @@ public class ViewController {
     @RequestMapping("/myinfo")
     public String toInfo() {
         return "userinfo";
+    }
+
+    @RequestMapping("/modifypwd")
+    public String toModifyPwd() {
+        return "modifypwd";
     }
 }

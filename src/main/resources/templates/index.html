@@ -59,6 +59,10 @@
                                 <span class="mdi mdi-logout text-primary"></span>
                                 退出
                             </a>
+                            <a class="dropdown-item" th:href="@{/modifypwd}">
+                                <span class="mdi mdi-logout text-primary"></span>
+                                修改密码
+                            </a>
                         </div>
                     </div>
                     <div sec:authorize="!isAuthenticated()">

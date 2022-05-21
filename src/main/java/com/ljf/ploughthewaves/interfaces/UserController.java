@@ -55,11 +55,13 @@ public class UserController {
 
     @PostMapping("/register")
     public Integer register(String openid,String password) {
-        if(userService.judgeUnregisteredUser(openid)) {
+        Integer x = userService.judgeUnregisteredUser(openid);
+        if(x == 1) {
+            log.info("{}正在注册",openid);
             userService.setPassword(openid,password);
             return 1;
         }
-        return -1;
+        return x;
     }
 
     @PostMapping("/getPassword")
@@ -70,6 +72,7 @@ public class UserController {
     @PostMapping("/setPassword")
     public Integer setPassword(String openid,String password) {
         if(userService.judgeLegalUser(openid)) {
+            log.info("{}正在重设密码",openid);
             userService.setPassword(openid,password);
             return 1;
         }

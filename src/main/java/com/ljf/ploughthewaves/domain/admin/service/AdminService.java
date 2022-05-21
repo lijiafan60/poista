@@ -14,6 +14,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -55,6 +56,12 @@ public class AdminService {
                 pt += x.getAcContestNumber() * strategy.getAcContestNumber();
             x.setPt(pt);
         }
+        stuInfoList.sort(new Comparator<StuInfo>() {
+            @Override
+            public int compare(StuInfo o1, StuInfo o2) {
+                return o2.getPt().compareTo(o1.getPt());
+            }
+        });
         return stuInfoList;
     }
 

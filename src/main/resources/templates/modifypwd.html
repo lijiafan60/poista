@@ -21,6 +21,7 @@
                         <div class="brand-logo">
                             <img src="../../images/logo.svg" alt="logo">
                         </div>
+                        <h4>修改密码</h4>
                         <div class="pt-3">
                             <div class="form-group">
                                 <input id="name" type="text" class="form-control form-control-lg" placeholder="用户名">
@@ -44,7 +45,7 @@
                                 <span id="howGetOpenid">怎么获取账号？</span>
                             </div>
                             <div class="text-center mt-4 font-weight-light">
-                                <a th:href="@{/login}" class="text-primary">登录</a>
+                                <a th:href="@{/login}" class="text-primary">去登录</a>
                             </div>
                         </div>
                     </div>
@@ -63,13 +64,13 @@
             if($("#pwd1").val() == $("#pwd2").val()) $("#pwd2").css("color","green");
             else $("#pwd2").css("color","red");
         })
-        $("#register").click(function (){
+        $("#modifyPwd").click(function (){
             if($("#name").val() == "") alert("请输入用户名");
             else if($("#name").val() == "anonymousUser") alert("非法用户名");
             else if($("#pwd1").val() == $("#pwd2").val())
             {
                 $.post({
-                    url:"/user/register/",
+                    url:"/user/setPassword",
                     data: {
                         "openid" : $("#name").val(),
                         "password" : $("#pwd1").val()

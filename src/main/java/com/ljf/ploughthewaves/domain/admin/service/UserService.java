@@ -33,9 +33,14 @@ public class UserService {
         return ojInfoList;
     }
 
-    public boolean judgeUnregisteredUser(String openid) {
+    public Integer judgeUnregisteredUser(String openid) {
         User user = userRepository.getUserByOpenid(openid);
-        return (user == null || user.getPassword() == null);
+        if(user == null) return -1;
+        if(user.getPassword() != null && !user.getPassword().equals("")) {
+            log.info("{}请求注册，但已有密码：{}",openid,user.getPassword());
+            return -2;
+        }
+        return 1;
     }
 
     public void setPassword(String openid,String password) {
