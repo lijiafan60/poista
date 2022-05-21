@@ -227,6 +227,7 @@
                             <table class="table table-striped" >
                                 <thead>
                                 <tr>
+                                    <th>序号</th>
                                     <th>姓名</th>
                                     <th>CF_ID</th>
                                     <th>Rating</th>
@@ -285,6 +286,7 @@
                 $.each(data , function (i,ex) {
                     var html =
                         "<tr>" +
+                        "<td>" + i + "</td>" +
                         "<td>" + ex.name + "</td>" +
                         "<td>" + ex.cfName + "</td>" +
                         "<td>" + ex.cfRating + "</td>" +
@@ -311,6 +313,21 @@
                 alert("快马加鞭更新中...请稍等10s后刷新");
             }
         })
+        let num = 30;
+        $("#upd").text(num + 's');
+        $("#upd").attr('disabled','true');
+        $("#upd").css('cursor','auto');
+        let interval = setInterval(function () {
+            num--;
+            if (num < 0) {
+                $("#upd").text("更新pt");
+                $("#upd").removeAttr('disabled');
+                $("#upd").css('cursor', 'pointer');
+                clearInterval(interval);
+            } else {
+                $("#upd").text(num + 's');
+            }
+        }, 1000);
     });
 
     $("#strategy").click(function () {

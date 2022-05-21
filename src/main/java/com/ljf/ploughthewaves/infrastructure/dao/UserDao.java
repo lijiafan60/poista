@@ -2,6 +2,7 @@ package com.ljf.ploughthewaves.infrastructure.dao;
 
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -26,4 +27,6 @@ public interface UserDao {
     void setDetailInfo(User user);
 
     User queryUserByOpenid(String openid);
+
+    void setPassword(@Param("openid") String openid,@Param("password") String password);
 }

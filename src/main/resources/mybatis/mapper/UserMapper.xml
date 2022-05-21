@@ -50,4 +50,10 @@
         from ploughthewaves.user
         where school = #{school};
     </select>
+
+    <update id="setPassword">
+        update ploughthewaves.user
+        set password = #{password}
+        where openid = #{openid}
+    </update>
 </mapper>

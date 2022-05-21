@@ -17,4 +17,5 @@ public interface IUserRepository {
     User getUserByOpenid(String openid);
     void setStatisticsStrategy(Strategy strategy, String school);
     List<OjInfo> getStatisticsInfo(String openid);
+    void setPassword(String openid,String password);
 }

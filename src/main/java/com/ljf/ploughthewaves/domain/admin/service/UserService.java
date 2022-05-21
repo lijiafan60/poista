@@ -32,4 +32,21 @@ public class UserService {
         }
         return ojInfoList;
     }
+
+    public boolean judgeUnregisteredUser(String openid) {
+        User user = userRepository.getUserByOpenid(openid);
+        return (user == null || user.getPassword() == null);
+    }
+
+    public void setPassword(String openid,String password) {
+        userRepository.setPassword(openid,password);
+    }
+
+    public String getPassword(String openid) {
+        return userRepository.getUserByOpenid(openid).getPassword();
+    }
+
+    public boolean judgeLegalUser(String openid) {
+        return (userRepository.getUserByOpenid(openid) != null);
+    }
 }

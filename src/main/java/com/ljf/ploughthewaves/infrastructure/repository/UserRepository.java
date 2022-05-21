@@ -174,4 +174,9 @@ public class UserRepository implements IUserRepository {
         }
         return ojInfoList;
     }
+
+    @Override
+    public void setPassword(String openid, String password) {
+        userDao.setPassword(openid,password);
+    }
 }
