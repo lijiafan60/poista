@@ -2,3 +2,14 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 src/main/resources/application.yml
 src/main/resources/static/css/style.css
+src/main/resources/static/js/chart.js
+src/main/resources/static/js/dashboard.js
+src/main/resources/static/js/data-table.js
+src/main/resources/static/js/documentation.js
+src/main/resources/static/js/file-upload.js
+src/main/resources/static/js/hoverable-collapse.js
+src/main/resources/static/js/off-canvas.js
+src/main/resources/static/js/tabs.js
+src/main/resources/static/js/template.js
+src/main/resources/static/vendors/base/vendor.bundle.base.js
+src/main/resources/static/vendors/base/vendor.bundle.base.css
