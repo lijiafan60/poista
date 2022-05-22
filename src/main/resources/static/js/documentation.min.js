@@ -1,0 +1,1 @@
+!function(o){"use strict";o(function(){function t(){0!==location.hash.length&&o("html").animate({scrollTop:o(location.hash).offset().top-160},500)}o(document).on("click",'a[href^="#"]',function(o){window.setTimeout(function(){t()},0)}),window.setTimeout(t,0)})}(jQuery);
