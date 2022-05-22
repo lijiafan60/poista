@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljf.ploughthewaves.infrastructure.dao.UserDao">
+    <insert id="insert" parameterType="com.ljf.ploughthewaves.infrastructure.po.User">
+        insert into ploughthewaves.user(id, openid, name, school, ispublic, isadmin, role)
+        value (#{id},#{openId},#{name},#{school},#{isPublic},#{isAdmin},#{role});
+    </insert>
+
+    <select id="queryUserIdByOpenId" parameterType="String" resultType="Integer">
+        select id
+        from ploughthewaves.user
+        where openid = #{openid};
+    </select>
+
+    <delete id="delete" parameterType="Integer">
+        delete from ploughthewaves.user
+        where id = #{uid};
+    </delete>
+
+    <update id="setDetailInfo" parameterType="com.ljf.ploughthewaves.infrastructure.po.User">
+        update ploughthewaves.user
+        set name = #{name} , school = #{school} , ispublic = #{isPublic}
+        where openid = #{openId};
+    </update>
+
+    <select id="queryAllUser" resultType="Integer">
+        select id
+        from ploughthewaves.user
+    </select>
+
+    <resultMap id="user" type="com.ljf.ploughthewaves.infrastructure.po.User">
+        <result property="id" column="id"/>
+        <result property="openId" column="openid"/>
+        <result property="name" column="name"/>
+        <result property="school" column="school"/>
+        <result property="isPublic" column="ispublic"/>
+        <result property="isAdmin" column="isadmin"/>
+        <result property="role" column="role"/>
+        <result property="password" column="password"/>
+    </resultMap>
+    <select id="queryUserByOpenid" resultMap="user" parameterType="String">
+        select id, openid, name, school, ispublic, isadmin, role, password
+        from ploughthewaves.user
+        where openid = #{openid};
+    </select>
+    <select id="queryUserBySchool" resultMap="user" parameterType="String">
+        select id, openid, name, school, ispublic, isadmin, role, password
+        from ploughthewaves.user
+        where school = #{school};
+    </select>
+
+    <update id="setPassword">
+        update ploughthewaves.user
+        set password = #{password}
+        where openid = #{openid}
+    </update>
+</mapper>

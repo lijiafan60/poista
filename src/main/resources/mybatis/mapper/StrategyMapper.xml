@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljf.ploughthewaves.infrastructure.dao.StrategyDao">
+
+    <insert id="addStrategy">
+        insert into ploughthewaves.strategy (school, cf_rating, cf_max_rating, cf_recent_max_rating, cf_contest_number, cf_recent_contest_number, ac_rating, ac_max_rating, ac_contest_number, all_solved_number)
+        value (#{school},#{strategy.cfRating},#{strategy.cfMaxRating},#{strategy.cfRecentMaxRating},#{strategy.cfContestNumber},#{strategy.cfRecentContestNumber},#{strategy.acRating},#{strategy.acMaxRating},#{strategy.acContestNumber},#{strategy.allSolvedNumber});
+    </insert>
+
+    <resultMap id="strategy" type="com.ljf.ploughthewaves.infrastructure.po.Strategy">
+        <result column="school" property="school"/>
+        <result column="cf_rating" property="cfRating"/>
+        <result column="cf_max_rating" property="cfMaxRating"/>
+        <result column="cf_recent_max_rating" property="cfRecentMaxRating"/>
+        <result column="cf_contest_number" property="cfContestNumber"/>
+        <result column="cf_recent_contest_number" property="cfRecentContestNumber"/>
+        <result column="ac_rating" property="acRating"/>
+        <result column="ac_max_rating" property="acMaxRating"/>
+        <result column="ac_contest_number" property="acContestNumber"/>
+        <result column="all_solved_number" property="allSolvedNumber"/>
+    </resultMap>
+
+    <select id="getStrategy" resultMap="strategy" parameterType="String">
+        select school, cf_rating, cf_max_rating, cf_recent_max_rating, cf_contest_number, cf_recent_contest_number, ac_rating, ac_max_rating, ac_contest_number, all_solved_number
+        from ploughthewaves.strategy
+        where school = #{school}
+    </select>
+
+    <delete id="delStrategy" parameterType="String">
+        delete from strategy
+        where school = #{school}
+    </delete>
+</mapper>
