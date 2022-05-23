@@ -29,4 +29,6 @@ public interface UserDao {
     User queryUserByOpenid(String openid);
 
     void setPassword(@Param("openid") String openid,@Param("password") String password);
+
+    User queryUserByName(String name);
 }

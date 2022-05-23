@@ -2,10 +2,6 @@ package com.ljf.ploughthewaves.infrastructure.repository;
 
 import com.ljf.ploughthewaves.application.mq.producer.KafkaProducer;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
-import com.ljf.ploughthewaves.domain.poista.model.res.ContestCrawlRes;
-import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
-import com.ljf.ploughthewaves.domain.poista.repository.IDoCrawlRepository;
-import com.ljf.ploughthewaves.domain.poista.service.crwal.CrawlFactory;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
@@ -22,8 +18,6 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +43,7 @@ public class WxRepository implements IWxRepository {
     public void addUser(String openid) {
         User user = new User();
         user.setOpenId(openid);
-        user.setName(openid);
+        user.setName(openid.substring(5));
         user.setIsAdmin(false);
         user.setIsPublic(false);
         user.setRole("ROLE_user");
@@ -78,9 +72,10 @@ public class WxRepository implements IWxRepository {
      */
     @Override
     public void updateStatisticsInfo(String openid) {
-        log.info("根据openid查询出crawlReq");
-        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByOpenid(openid);
-        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByOpenid(openid);
+        User user = userDao.queryUserByOpenid(openid);
+        log.info("更新{}的统计信息",user.getName());
+        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByUid(user.getId());
+        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByUid(user.getId());
         list1.addAll(list2);
         /**
          * 发送mq
@@ -108,15 +103,19 @@ public class WxRepository implements IWxRepository {
      * @param openid
      * @param name
      * @param school
+     * @return
      */
     @Override
-    public void setDetailInfo(String openid, String name, String school) {
+    public Integer setDetailInfo(String openid, String name, String school) {
+        User user0 = userDao.queryUserByName(name);
+        if(user0 != null) return -1;
         User user = new User();
         user.setOpenId(openid);
         user.setName(name);
         user.setSchool(school);
         user.setIsPublic(Boolean.TRUE);
         userDao.setDetailInfo(user);
+        return 1;
     }
 
     @Override

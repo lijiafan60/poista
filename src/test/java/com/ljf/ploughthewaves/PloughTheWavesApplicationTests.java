@@ -3,6 +3,7 @@ package com.ljf.ploughthewaves;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
+import com.ljf.ploughthewaves.domain.poista.service.crwal.Crawl;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.impl.AtcoderCrawl;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.impl.CodeforcesCrawl;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.impl.VjudgeCrawl;
@@ -53,18 +54,18 @@ class PloughTheWavesApplicationTests {
     @Resource
     OkHttpApi okHttpApi;
     @Resource
-    CodeforcesCrawl codeforcesCrawl;
+    Crawl codeforcesCrawl;
     @Resource
-    AtcoderCrawl atcoderCrawl;
+    Crawl atcoderCrawl;
     @Resource
-    VjudgeCrawl vjudgeCrawl;
+    Crawl vjudgeCrawl;
     @Test
     void testCodeforcesCrawl() throws IOException {
         CrawlReq crawlReq = new CrawlReq();
         crawlReq.setUid(11);
         crawlReq.setOjType(0);
         crawlReq.setOjUsername("lllijiafan");
-        log.info(codeforcesCrawl.doCrawl(crawlReq).toString());
+
     }
     @Test
     void testAtcoderCrawl() throws IOException {
@@ -72,7 +73,7 @@ class PloughTheWavesApplicationTests {
         crawlReq.setUid(11);
         crawlReq.setOjType(1);
         crawlReq.setOjUsername("lijiafan678");
-        log.info(atcoderCrawl.doCrawl(crawlReq).toString());
+
     }
     @Test
     void testVjudgeCrawl() throws IOException {
@@ -80,6 +81,5 @@ class PloughTheWavesApplicationTests {
         crawlReq.setUid(11);
         crawlReq.setOjType(2);
         crawlReq.setOjUsername("lijiafan666");
-        log.info(vjudgeCrawl.doCrawl(crawlReq).toString());
     }
 }

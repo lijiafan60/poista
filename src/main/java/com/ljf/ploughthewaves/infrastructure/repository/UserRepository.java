@@ -5,7 +5,6 @@ import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
-import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.infrastructure.dao.StrategyDao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
@@ -40,8 +39,8 @@ public class UserRepository implements IUserRepository {
     private KafkaProducer kafkaProducer;
 
     @Override
-    public User findUserByUsername(String openid) {
-        return userDao.queryUserByOpenid(openid);
+    public User findUserByUsername(String name) {
+        return userDao.queryUserByName(name);
     }
 
     @Override
@@ -50,8 +49,8 @@ public class UserRepository implements IUserRepository {
         String school = userDao.queryUserByOpenid(openid).getSchool();
         List<User> userList = userDao.queryUserBySchool(school);
         for(User x : userList) {
-            crawlReqList.addAll(userAndOj1Dao.getCrawlReqListByOpenid(x.getOpenId()));
-            crawlReqList.addAll(userAndOj2Dao.getCrawlReqListByOpenid(x.getOpenId()));
+            crawlReqList.addAll(userAndOj1Dao.getCrawlReqListByUid(x.getId()));
+            crawlReqList.addAll(userAndOj2Dao.getCrawlReqListByUid(x.getId()));
         }
         return crawlReqList;
     }
@@ -59,8 +58,10 @@ public class UserRepository implements IUserRepository {
     @Override
     public void updateStatisticsInfo(String openid) {
         log.info("更新统计信息");
-        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByOpenid(openid);
-        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByOpenid(openid);
+        User user = userDao.queryUserByOpenid(openid);
+
+        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByUid(user.getId());
+        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByUid(user.getId());
         list1.addAll(list2);
 
         for(CrawlReq crawlReq : list1) {

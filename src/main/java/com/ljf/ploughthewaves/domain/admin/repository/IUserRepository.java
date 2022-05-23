@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public interface IUserRepository {
-    User findUserByUsername(String openid);
+    User findUserByUsername(String name);
     List<CrawlReq> getStuCrawlReq(String openid);
     void updateStatisticsInfo(String openid);
     List<StuInfo> getStuInfo(String school);

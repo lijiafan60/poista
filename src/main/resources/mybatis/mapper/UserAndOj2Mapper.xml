@@ -43,10 +43,10 @@
         <result column="all_contest_number" property="allContestNumber"/>
         <result column="upd_time" property="updTime"/>
     </resultMap>
-    <select id="getCrawlReqListByOpenid" parameterType="String" resultMap="crawlReq">
+    <select id="getCrawlReqListByUid" parameterType="Integer" resultMap="crawlReq">
         select uid,ojtype,oj_username,all_solved_number,all_contest_number,upd_time
-        from ploughthewaves.user join ploughthewaves.userandoj2 on user.id = userandoj2.uid
-        where user.openid = #{openid};
+        from ploughthewaves.userandoj2
+        where uid = #{uid};
     </select>
     <select id="getCrawlReqList" resultMap="crawlReq">
         select uid,ojtype,oj_username,all_solved_number,all_contest_number,upd_time

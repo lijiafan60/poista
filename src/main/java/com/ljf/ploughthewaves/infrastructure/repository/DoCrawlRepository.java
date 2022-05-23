@@ -1,6 +1,5 @@
 package com.ljf.ploughthewaves.infrastructure.repository;
 
-import com.ljf.ploughthewaves.domain.poista.model.res.ContestCrawlRes;
 import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
 import com.ljf.ploughthewaves.domain.poista.repository.IDoCrawlRepository;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
@@ -32,7 +31,7 @@ public class DoCrawlRepository implements IDoCrawlRepository {
         userAndOj1Dao.update(userAndOj1);
     }
 
-    public void updateOj2(ContestCrawlRes contestCrawlRes) {
+    public void updateOj2(CrawlRes contestCrawlRes) {
         UserAndOj2 userAndOj2 = new UserAndOj2();
         userAndOj2.setUid(contestCrawlRes.getUid());
         userAndOj2.setOjType(contestCrawlRes.getOjType());

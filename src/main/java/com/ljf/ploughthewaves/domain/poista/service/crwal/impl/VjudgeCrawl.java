@@ -6,6 +6,7 @@ import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.Crawl;
 import com.ljf.ploughthewaves.domain.poista.service.util.OkHttpApi;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,18 +21,18 @@ public class VjudgeCrawl implements Crawl {
     private OkHttpApi okHttpApi;
 
     @Override
-    public synchronized CrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
-
-        CrawlRes vjudge = new CrawlRes();
+    @Async("CommonCrawlExecutor")
+    public void doCrawl(CrawlReq crawlReq, CrawlRes vjudge) throws IOException {
 
         vjudge.setOjType(crawlReq.getOjType());
         vjudge.setOjUsername(crawlReq.getOjUsername());
         vjudge.setUid(crawlReq.getUid());
+
         String run = okHttpApi.run("https://ojhunt.com/api/crawlers/vjudge/" + crawlReq.getOjUsername());
         if(JSONObject.parseObject(run).getString("error").equals("false")) {
             vjudge.setAllSolvedNumber(JSONObject.parseObject(run).getJSONObject("data").getInteger("solved"));
         }
         vjudge.setUpdTime(new Date());
-        return vjudge;
+        return;
     }
 }

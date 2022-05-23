@@ -1,6 +1,5 @@
 package com.ljf.ploughthewaves.infrastructure.dao;
 
-import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
@@ -28,7 +27,7 @@ public interface UserAndOj1Dao {
 
     List<BindInfo> getBindInfo(String openid);
 
-    List<CrawlReq> getCrawlReqListByOpenid(String openid);
+    List<CrawlReq> getCrawlReqListByUid(Integer uid);
 
     List<CrawlReq> getCrawlReqList();
 

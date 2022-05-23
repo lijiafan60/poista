@@ -3,7 +3,6 @@ package com.ljf.ploughthewaves.domain.wx.repository;
 import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IWxRepository {
     void addUser(String openid);
@@ -13,6 +12,6 @@ public interface IWxRepository {
     void delOj1(Integer ojType,String ojUsername,String openid);
     void addOj2(Integer ojType,String ojUsername,String openid);
     void delOj2(Integer ojType,String ojUsername,String openid);
-    void setDetailInfo(String openid, String name, String school);
+    Integer setDetailInfo(String openid, String name, String school);
     List<BindInfo> getAllBindInfo(String openid);
 }

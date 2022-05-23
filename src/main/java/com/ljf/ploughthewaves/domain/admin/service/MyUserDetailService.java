@@ -44,7 +44,6 @@ public class MyUserDetailService implements UserDetailsService {
         for(String roleItem:roleLists) {
             arrayList.add(new SimpleGrantedAuthority(roleItem));
         }
-        System.out.println(arrayList);
         return arrayList;
     }
 }

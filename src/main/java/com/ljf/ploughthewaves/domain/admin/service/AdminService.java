@@ -29,7 +29,9 @@ public class AdminService {
     @Resource
     private StrategyDao strategyDao;
 
-    public List<StuInfo> getStuInfo(String openid) {
+    public List<StuInfo> getStuInfo(String name) {
+        String openid = userDao.queryUserByName(name).getOpenId();
+
         String school = userDao.queryUserByOpenid(openid).getSchool();
         List<StuInfo> stuInfoList = userRepository.getStuInfo(school);
         log.info("根据策略计算pt");
@@ -65,7 +67,13 @@ public class AdminService {
         return stuInfoList;
     }
 
-    public void updStuStatisticsInfo(String openid) {
+    /**
+     * 更新学生池信息
+     * @param name
+     */
+    public void updStuStatisticsInfo(String name) {
+        String openid = userDao.queryUserByName(name).getOpenId();
+
         List<CrawlReq> reqList = userRepository.getStuCrawlReq(openid);
         for(CrawlReq crawlReq:reqList) {
             ListenableFuture<SendResult<String,Object>> future = kafkaProducer.sendCrawlReq(crawlReq);
@@ -84,6 +92,12 @@ public class AdminService {
             });
         }
     }
+
+    /**
+     * 设置统计策略
+     * @param strategy
+     * @param school
+     */
     public void setStatisticsStrategy(Strategy strategy, String school) {
         userRepository.setStatisticsStrategy(strategy,school);
     }

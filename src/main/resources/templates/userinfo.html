@@ -146,7 +146,7 @@
         $.post({
             url: "/user/getStatisticsInfo",
             data: {
-                "openid" : $("#authname").html()
+                "name" : $("#authname").html()
             },
             success: function (data) {
                 $.each(data , function (i,ex) {
@@ -189,7 +189,7 @@
             $.post({
                 url: "/user/updateStatisticsInfo" ,
                 data: {
-                    "openid" : $("#authname").html()
+                    "name" : $("#authname").html()
                 },
                 success(msg) {
                     location.reload();

@@ -277,12 +277,13 @@
 <script src="../../js/data-table.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+
     $(function (){
         $("#strategyForm").attr("action","/admin/setStatisticsStrategy/" + $("#authname").html());
         $.post({
             url:"/admin/getStuInfo",
             data : {
-                "openid" : $("#authname").html()
+                "name" : $("#authname").html()
             },
             success: function (data) {
                 $.each(data , function (i,ex) {

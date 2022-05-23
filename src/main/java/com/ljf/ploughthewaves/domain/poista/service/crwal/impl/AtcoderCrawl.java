@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
-import com.ljf.ploughthewaves.domain.poista.model.res.ContestCrawlRes;
+import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.Crawl;
 import com.ljf.ploughthewaves.domain.poista.service.util.OkHttpApi;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,8 +26,8 @@ public class AtcoderCrawl implements Crawl {
     private OkHttpApi okHttpApi;
 
     @Override
-    public synchronized ContestCrawlRes doCrawl(CrawlReq crawlReq) throws IOException {
-        ContestCrawlRes atcoder = new ContestCrawlRes();
+    @Async("CommonCrawlExecutor")
+    public void doCrawl(CrawlReq crawlReq, CrawlRes atcoder) throws IOException {
 
         atcoder.setUid(crawlReq.getUid());
         atcoder.setOjType(crawlReq.getOjType());
@@ -39,7 +40,7 @@ public class AtcoderCrawl implements Crawl {
         if(run == "") {
             log.error("用户{}的 {} {} 不存在",crawlReq.getUid(),crawlReq.getOjType(),crawlReq.getOjUsername());
             atcoder.setUpdTime(new Date());
-            return atcoder;
+            return;
         }
         atcoder.setAllSolvedNumber(Integer.valueOf(JSONObject.parseObject(run).getString("count")));
         /** 计算一个月内刷题数
@@ -75,6 +76,5 @@ public class AtcoderCrawl implements Crawl {
         atcoder.setAllContestNumber(Integer.parseInt(el.get(0).select("td").get(0).text()));
         atcoder.setUpdTime(new Date());
 
-        return atcoder;
     }
 }

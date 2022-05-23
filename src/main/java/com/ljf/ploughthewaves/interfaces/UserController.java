@@ -4,6 +4,7 @@ import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
+import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private UserDao userDao;
+
     /**
      * 匿名用户获取刷题数
      * @param ojName
@@ -37,24 +41,28 @@ public class UserController {
 
     /**
      * 更新统计信息
-     * @param openid
+     * @param name
      * @return
      */
     @PostMapping("/updateStatisticsInfo")
-    public String update(@RequestParam String openid) {
-        log.info("{}正在更新统计信息",openid);
+    public String update(@RequestParam String name) {
+        log.info("{}正在更新统计信息",name);
+        String openid = userDao.queryUserByName(name).getOpenId();
         userService.updateStatisticsInfo(openid);
         return null;
     }
 
     @PostMapping("/getStatisticsInfo")
-    public List<OjInfo> get(@RequestParam String openid) {
-        log.info("{}正在获取统计信息",openid);
+    public List<OjInfo> get(@RequestParam String name) {
+        log.info("{}正在获取统计信息",name);
+        String openid = userDao.queryUserByName(name).getOpenId();
         return userService.getStatisticsInfo(openid);
     }
 
     @PostMapping("/register")
-    public Integer register(String openid,String password) {
+    public Integer register(String name,String password) {
+        String openid = userDao.queryUserByName(name).getOpenId();
+
         Integer x = userService.judgeUnregisteredUser(openid);
         if(x == 1) {
             log.info("{}正在注册",openid);
@@ -65,12 +73,16 @@ public class UserController {
     }
 
     @PostMapping("/getPassword")
-    public String getPassword(String openid) {
+    public String getPassword(String name) {
+        String openid = userDao.queryUserByName(name).getOpenId();
+
         return userService.getPassword(openid);
     }
 
     @PostMapping("/setPassword")
-    public Integer setPassword(String openid,String password) {
+    public Integer setPassword(String name,String password) {
+        String openid = userDao.queryUserByName(name).getOpenId();
+
         if(userService.judgeLegalUser(openid)) {
             log.info("{}正在重设密码",openid);
             userService.setPassword(openid,password);

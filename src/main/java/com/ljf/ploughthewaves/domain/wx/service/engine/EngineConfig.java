@@ -39,7 +39,7 @@ public class EngineConfig {
     private GetAllBindInfoFilter getAllBindInfoFilter;
 
     @Resource
-    private GetOpenidFilter getOpenidFilter;
+    private GetNameFilter getNameFilter;
 
     protected static Map<String, Map<String, LogicFilter>> logicFilterMap = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class EngineConfig {
                 put("3",updStatisticsInfoFilter);
                 put("4",setDetailInfoFilter);
                 put("5", getAllBindInfoFilter);
-                put("6",getOpenidFilter);
+                put("6", getNameFilter);
             }
         });
 

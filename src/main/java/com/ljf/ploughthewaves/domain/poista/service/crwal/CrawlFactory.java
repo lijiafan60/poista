@@ -13,11 +13,11 @@ import java.util.Map;
 @Component
 public class CrawlFactory {
     @Resource
-    private CodeforcesCrawl codeforcesCrawl;
+    private Crawl codeforcesCrawl;
     @Resource
-    private AtcoderCrawl atcoderCrawl;
+    private Crawl atcoderCrawl;
     @Resource
-    private VjudgeCrawl vjudgeCrawl;
+    private Crawl vjudgeCrawl;
 
     public Map<Integer,Crawl> crawlConfig = new HashMap<>();
 

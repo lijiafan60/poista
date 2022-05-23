@@ -28,13 +28,14 @@ public class AdminController {
     public UserDao userDao;
     /**
      * 管理员获取本校学生信息
-     * @param openid
+     * @param name
      * @return
      */
     @PostMapping("/getStuInfo")
-    public List<StuInfo> getStuInfo(@RequestParam String openid) {
-        log.info("{}正在获取本校学生信息",openid);
-        log.info("正在验证{}管理员身份",openid);
+    public List<StuInfo> getStuInfo(@RequestParam String name) {
+        log.info("{}正在获取本校学生信息",name);
+        log.info("正在验证{}管理员身份",name);
+        String openid = userDao.queryUserByName(name).getOpenId();
         if(!adminService.isAdmin(openid)) {
             return null;
         }
@@ -44,7 +45,7 @@ public class AdminController {
 
     /**
      * 设置统计策略
-     * @param openid
+     * @param name
      * @param cfRating
      * @param cfMaxRating
      * @param cfRecentMaxRating
@@ -56,12 +57,14 @@ public class AdminController {
      * @param allSolvedNumber
      * @return
      */
-    @PostMapping("/setStatisticsStrategy/{openid}")
-    public String setStatisticsStrategy (@PathVariable String openid,
+    @PostMapping("/setStatisticsStrategy/{name}")
+    public String setStatisticsStrategy (@PathVariable String name,
                                         Double cfRating,Double cfMaxRating, Double cfRecentMaxRating,
                                         Double cfContestNumber, Double cfRecentContestNumber,
                                         Double acRating, Double acMaxRating, Double acContestNumber,
                                         Double allSolvedNumber) {
+        String openid = userDao.queryUserByName(name).getOpenId();
+
         String school = userDao.queryUserByOpenid(openid).getSchool();
         log.info("{}正在设置{}的统计策略",openid,school);
         if(!userService.isAdmin(openid,school)) return "-1";
@@ -84,24 +87,24 @@ public class AdminController {
 
     /**
      * 获取excel
-     * @param openid
+     * @param name
      * @param school
      * @return
      */
-    @PostMapping("/getExcel/{openid}/{school}")
-    public String getExcel(@PathVariable String openid, @PathVariable String school) {
+    @PostMapping("/getExcel/{name}/{school}")
+    public String getExcel(@PathVariable String name, @PathVariable String school) {
         return null;
     }
 
 
     /**
      * 更新校内学生统计信息
-     * @param openid
+     * @param name
      * @return
      */
-    @PostMapping("/updateStuStatisticsInfo/{openid}")
-    public String updateStuStatisticsInfo(@PathVariable String openid) {
-        adminService.updStuStatisticsInfo(openid);
+    @PostMapping("/updateStuStatisticsInfo/{name}")
+    public String updateStuStatisticsInfo(@PathVariable String name) {
+        adminService.updStuStatisticsInfo(name);
         return null;
     }
 }

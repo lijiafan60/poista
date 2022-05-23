@@ -24,8 +24,16 @@ public class SetDetailInfoFilter implements LogicFilter {
             return null;
         }
         log.info("{}正在设置信息: {} + {}",request.getOpenId(),params[1],params[2]);
-        wxRepository.setDetailInfo(request.getOpenId(),params[1],params[2]);
-        log.info("{}设置信息成功",request.getOpenId());
-        return "设置成功";
+        Integer code = wxRepository.setDetailInfo(request.getOpenId(),params[1],params[2]);
+        if(code == 1) {
+            log.info("{}设置信息成功", request.getOpenId());
+            return "设置成功";
+        } else if(code == -1) {
+            log.info("{}设置失败,该用户名已存在",request.getOpenId());
+            return "设置失败,用户名已存在";
+        } else {
+            log.error("{}设置失败，原因位置！！",request.getOpenId());
+            return "设置失败";
+        }
     }
 }

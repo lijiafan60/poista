@@ -42,7 +42,7 @@
                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" >提交</button>
                             </div>
                             <div class="text-center mt-4 font-weight-light">
-                                <span id="howGetOpenid">怎么获取账号？</span>
+                                <span id="howGetName">怎么获取账号？</span>
                             </div>
                             <div class="text-center mt-4 font-weight-light">
                                 <a th:href="@{/login}" class="text-primary">去登录</a>
@@ -72,7 +72,7 @@
                 $.post({
                     url:"/user/setPassword",
                     data: {
-                        "openid" : $("#name").val(),
+                        "name" : $("#name").val(),
                         "password" : $("#pwd1").val()
                     },
                     success:function (msg) {
@@ -85,8 +85,8 @@
             }
             else alert("两次密码输入不一致!");
         })
-        $("#howGetOpenid").click( function () {
-            alert("关注微信公众号,获取openid");
+        $("#howGetName").click( function () {
+            alert("关注微信公众号,获取登录账号");
         })
     })
 </script>

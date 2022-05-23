@@ -50,7 +50,11 @@
         from ploughthewaves.user
         where school = #{school};
     </select>
-
+    <select id="queryUserByName" resultMap="user" parameterType="String">
+        select id, openid, name, school, ispublic, isadmin, role, password
+        from user
+        where name = #{name};
+    </select>
     <update id="setPassword">
         update ploughthewaves.user
         set password = #{password}
