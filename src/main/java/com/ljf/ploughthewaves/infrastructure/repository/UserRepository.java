@@ -9,10 +9,7 @@ import com.ljf.ploughthewaves.infrastructure.dao.StrategyDao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
-import com.ljf.ploughthewaves.infrastructure.po.Strategy;
-import com.ljf.ploughthewaves.infrastructure.po.User;
-import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
-import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
+import com.ljf.ploughthewaves.infrastructure.po.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Repository;
@@ -189,4 +186,71 @@ public class UserRepository implements IUserRepository {
     public void setPassword(String openid, String password) {
         userDao.setPassword(openid,password);
     }
+
+    @Override
+    public BindInfo getBindInfo(Integer uid, Integer ojType, String ojUsername) {
+        if(ojType >= 2) return userAndOj1Dao.queryByUidOjTypeOjUsername(uid,ojType,ojUsername);
+        else return userAndOj2Dao.queryByUidOjTypeOjUsername(uid,ojType,ojUsername);
+    }
+
+    /**
+     * 添加oj信息
+     * @param ojType
+     * @param ojUsername
+     * @param openid
+     */
+    @Override
+    public void addOj1(Integer ojType, String ojUsername, String openid) {
+        log.info("{}正在绑定oj : ojType:{},username:{}",openid,ojType,ojUsername);
+        UserAndOj1 userAndOj1 = new UserAndOj1();
+        userAndOj1.setOjType(ojType);
+        userAndOj1.setOjUsername(ojUsername);
+        Integer uid = userDao.queryUserIdByOpenId(openid);
+        userAndOj1.setUid(uid);
+        userAndOj1.setAllSolvedNumber(0);
+        userAndOj1Dao.insert(userAndOj1);
+        log.info("{}插入成功",openid);
+    }
+
+    /**
+     * 解绑oj
+     * @param ojType
+     * @param ojUsername
+     * @param openid
+     */
+    @Override
+    public void delOj1(Integer ojType, String ojUsername, String openid) {
+        userAndOj1Dao.deleteByOpenidOjTypeUsername(ojType,ojUsername,openid);
+    }
+
+    /**
+     * 添加oj信息
+     * @param ojType
+     * @param ojUsername
+     * @param openid
+     */
+    @Override
+    public void addOj2(Integer ojType, String ojUsername, String openid) {
+        log.info("{}正在绑定oj : ojType:{},username:{}",openid,ojType,ojUsername);
+        UserAndOj2 userAndOj2 = new UserAndOj2();
+        userAndOj2.setOjType(ojType);
+        userAndOj2.setOjUsername(ojUsername);
+        Integer uid = userDao.queryUserIdByOpenId(openid);
+        userAndOj2.setUid(uid);
+        userAndOj2.setAllSolvedNumber(0);
+        userAndOj2Dao.insert(userAndOj2);
+        log.info("{}插入成功",openid);
+    }
+
+    /**
+     * 解绑oj
+     * @param ojType
+     * @param ojUsername
+     * @param openid
+     */
+    @Override
+    public void delOj2(Integer ojType, String ojUsername, String openid) {
+        userAndOj2Dao.deleteByOpenidOjTypeUsername(ojType,ojUsername,openid);
+    }
+
 }

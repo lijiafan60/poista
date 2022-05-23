@@ -56,11 +56,15 @@ public class CodeforcesCrawl implements Crawl {
             codeforces.setRecentContestNumber(recentContestNumber);
             codeforces.setAllContestNumber(JSONObject.parseObject(run).getJSONArray("result").size());
 
+            Thread.sleep(200);
+
             run = okHttpApi.run("https://codeforces.com/api/user.info?handles=" + crawlReq.getOjUsername());
             jsonArray = JSONObject.parseObject(run).getJSONArray("result");
 
             codeforces.setMaxRating(jsonArray.getJSONObject(0).getInteger("maxRating"));
             codeforces.setNowRating(jsonArray.getJSONObject(0).getInteger("rating"));
+
+            Thread.sleep(200);
 
             run = okHttpApi.run("https://codeforces.com/api/user.status?handle=" + crawlReq.getOjUsername());
             jsonArray = JSONObject.parseObject(run).getJSONArray("result");

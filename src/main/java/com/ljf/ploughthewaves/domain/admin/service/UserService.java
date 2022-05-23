@@ -3,6 +3,7 @@ package com.ljf.ploughthewaves.domain.admin.service;
 import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
+import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.List;
 public class UserService {
     @Resource
     private IUserRepository userRepository;
+    @Resource
+    private UserDao userDao;
 
     public void updateStatisticsInfo(String openid) {
         userRepository.updateStatisticsInfo(openid);
@@ -47,11 +50,33 @@ public class UserService {
         userRepository.setPassword(openid,password);
     }
 
-    public String getPassword(String openid) {
-        return userRepository.getUserByOpenid(openid).getPassword();
-    }
-
     public boolean judgeLegalUser(String openid) {
         return (userRepository.getUserByOpenid(openid) != null);
+    }
+
+    public Integer bindOjInfo(String name,Integer ojType,String ojUsername) {
+        User user = userDao.queryUserByName(name);
+        String openid = user.getOpenId();
+        Integer uid = user.getId();
+        if(userRepository.getBindInfo(uid,ojType,ojUsername) != null) {
+            log.error("重复绑定");
+            return -2;
+        }
+        if(ojType >= 2) userRepository.addOj1(ojType,ojUsername,openid);
+        else userRepository.addOj2(ojType,ojUsername,openid);
+        return 1;
+    }
+
+    public Integer unBindOjInfo(String name,Integer ojType,String ojUsername) {
+        User user = userDao.queryUserByName(name);
+        String openid = user.getOpenId();
+        Integer uid = user.getId();
+        if(userRepository.getBindInfo(uid,ojType,ojUsername) == null) {
+            log.info("解绑的信息不存在");
+            return -2;
+        }
+        if(ojType >= 2) userRepository.delOj1(ojType,ojUsername,openid);
+        else userRepository.delOj2(ojType,ojUsername,openid);
+        return 1;
     }
 }

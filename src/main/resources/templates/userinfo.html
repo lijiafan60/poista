@@ -114,11 +114,58 @@
             <div class="content-wrapper">
                 <div id="personalInfo" class="row">
                     <div class="col-12 grid-margin stretch-card">
-                        <div class="d-flex justify-content-between flex-wrap">
+                        <div class="forms-sample">
                             <button id="upd" class="btn btn-primary mt-2 mt-xl-0">更新</button>
+                            <button id="bind" class="btn btn-primary mt-2 mt-xl-0">绑定OJ</button>
+                            <button id="unbind" class="btn btn-primary mt-2 mt-xl-0">解绑OJ</button>
+                        </div>
+                    </div>
+                    <div id="addBindInfo" class="col-12 grid-margin stretch-card" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="bindOJ">OJ</label>
+                                        <select class="form-control form-control-lg" id="bindOJ">
+                                            <option>vjudge</option>
+                                            <option>codeforces</option>
+                                            <option>atcoder</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bindname">用户名</label>
+                                        <input type="text" class="form-control" id="bindname">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2" id="bindsubmit">绑定</button>
+                                    <button id="cancelbind" type="button" class="btn btn-light">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="delBindInfo" class="col-12 grid-margin stretch-card" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="unbindOJ">OJ</label>
+                                        <select class="form-control form-control-lg" id="unbindOJ">
+                                            <option>vjudge</option>
+                                            <option>codeforces</option>
+                                            <option>atcoder</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="unbindname">用户名</label>
+                                        <input type="text" class="form-control" id="unbindname">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mr-2" id="unbindsubmit">解绑</button>
+                                    <button id="cancelunbind" type="button" class="btn btn-light">取消</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             <footer class="footer">
                 <div class="d-sm-flex justify-content-center justify-content-sm-between">
@@ -194,7 +241,6 @@
                     "name" : $("#authname").html()
                 },
                 success(msg) {
-                    location.reload();
                 }
             })
             let num = 30;
@@ -214,8 +260,52 @@
             }, 1000);
         })
 
-    })
+        $("#bindsubmit").click(function () {
+            $.post({
+                url: "user/bindOjInfo",
+                data:{
+                    "name": $("#authname").html(),
+                    "ojName": $("#bindOJ").val(),
+                    "ojUsername": $("#bindname").val()
+                },
+                success: function (data) {
+                    if(data == -1) alert("暂不支持此OJ");
+                    else if(data == -2) alert("请勿重复绑定");
+                    else alert("绑定成功")
+                }
+            })
+        })
 
+        $("#unbindsubmit").click(function () {
+            $.post({
+                url: "user/unBindOjInfo",
+                data:{
+                    "name": $("#authname").html(),
+                    "ojName": $("#unbindOJ").val(),
+                    "ojUsername": $("#unbindname").val()
+                },
+                success: function (data) {
+                    if(data == -1) alert("暂不支持此OJ");
+                    else if(data == -2) alert("未绑定此OJ与用户名");
+                    else alert("解绑成功")
+                }
+            })
+        })
+    })
+    $("#bind").click(function () {
+        if($("#addBindInfo").css("display") == 'none') $("#addBindInfo").css("display" , "block");
+        else $("#addBindInfo").css("display" , "none");
+    })
+    $("#cancelbind").click(function () {
+        $("#addBindInfo").css("display" , "none");
+    })
+    $("#unbind").click(function () {
+        if($("#delBindInfo").css("display") == 'none') $("#delBindInfo").css("display" , "block");
+        else $("#delBindInfo").css("display" , "none");
+    })
+    $("#cancelunbind").click(function () {
+        $("#delBindInfo").css("display" , "none");
+    })
 </script>
 </body>
 

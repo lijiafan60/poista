@@ -14,4 +14,5 @@ public interface IWxRepository {
     void delOj2(Integer ojType,String ojUsername,String openid);
     Integer setDetailInfo(String openid, String name, String school);
     List<BindInfo> getAllBindInfo(String openid);
+    BindInfo getBindInfo(Integer uid,Integer ojType,String ojUsername);
 }

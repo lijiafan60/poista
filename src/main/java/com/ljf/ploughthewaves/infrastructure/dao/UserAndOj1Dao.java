@@ -23,7 +23,7 @@ public interface UserAndOj1Dao {
 
     List<UserAndOj1> queryByUserId(Integer uid);
 
-    List<UserAndOj1> queryByUidOjType(Integer uid,Integer ojType);
+    BindInfo queryByUidOjTypeOjUsername(@Param("uid") Integer uid,@Param("ojType") Integer ojType,@Param("ojUsername") String ojUsername);
 
     List<BindInfo> getBindInfo(String openid);
 

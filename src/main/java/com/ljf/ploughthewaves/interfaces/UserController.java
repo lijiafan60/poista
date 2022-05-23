@@ -3,8 +3,10 @@ package com.ljf.ploughthewaves.interfaces;
 import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
+import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
+import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
@@ -53,6 +55,11 @@ public class UserController {
         return null;
     }
 
+    /**
+     * 获取统计信息
+     * @param name
+     * @return
+     */
     @PostMapping("/getStatisticsInfo")
     public List<OjInfo> get(@RequestParam String name) {
         log.info("{}正在获取统计信息",name);
@@ -60,6 +67,12 @@ public class UserController {
         return userService.getStatisticsInfo(openid);
     }
 
+    /**
+     * 注册
+     * @param name
+     * @param password
+     * @return
+     */
     @PostMapping("/register")
     public Integer register(String name,String password) {
         String openid = userDao.queryUserByName(name).getOpenId();
@@ -73,13 +86,12 @@ public class UserController {
         return x;
     }
 
-    @PostMapping("/getPassword")
-    public String getPassword(String name) {
-        String openid = userDao.queryUserByName(name).getOpenId();
-
-        return userService.getPassword(openid);
-    }
-
+    /**
+     * 设置密码
+     * @param name
+     * @param password
+     * @return
+     */
     @PostMapping("/setPassword")
     public Integer setPassword(String name,String password) {
         log.info("{}正在重设密码：{}",name,password);
@@ -92,5 +104,26 @@ public class UserController {
             return 1;
         }
         return -1;
+    }
+
+
+    @PostMapping("/bindOjInfo")
+    public Integer bindOjInfo(String name,String ojName,String ojUsername) {
+        Integer ojType = OjFilter.NameToType.get(ojName);
+        if(ojType == null) {
+            log.error("{} oj没找到",ojName);
+            return -1;
+        }
+        return userService.bindOjInfo(name, OjFilter.NameToType.get(ojName),ojUsername);
+    }
+
+    @PostMapping("/unBindOjInfo")
+    public Integer unBindOjInfo(String name,String ojName,String ojUsername) {
+        Integer ojType = OjFilter.NameToType.get(ojName);
+        if(ojType == null) {
+            log.error("{} oj没找到",ojName);
+            return -1;
+        }
+        return userService.unBindOjInfo(name, OjFilter.NameToType.get(ojName),ojUsername);
     }
 }

@@ -131,6 +131,12 @@ public class WxRepository implements IWxRepository {
         return res;
     }
 
+    @Override
+    public BindInfo getBindInfo(Integer uid, Integer ojType, String ojUsername) {
+        if(ojType >= 2) return userAndOj1Dao.queryByUidOjTypeOjUsername(uid,ojType,ojUsername);
+        else return userAndOj2Dao.queryByUidOjTypeOjUsername(uid,ojType,ojUsername);
+    }
+
     /**
      * 添加oj信息
      * @param ojType

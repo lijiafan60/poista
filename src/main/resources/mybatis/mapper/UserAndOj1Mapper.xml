@@ -33,6 +33,11 @@
         from ploughthewaves.user join ploughthewaves.userandoj1 on user.id = userandoj1.uid
         where user.openid = #{openid};
     </select>
+    <select id="queryByUidOjTypeOjUsername" resultMap="bindInfo">
+        select ojtype,oj_username,all_solved_number
+        from userandoj1
+        where uid = #{uid} and ojtype = #{ojType} and oj_username = #{ojUsername}
+    </select>
 
     <resultMap id="crawlReq" type="com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq">
         <result column="uid" property="uid"/>
