@@ -176,12 +176,6 @@ public class WxRepository implements IWxRepository {
         Integer uid = userDao.queryUserIdByOpenId(openid);
         userAndOj2.setUid(uid);
         userAndOj2.setAllSolvedNumber(0);
-        userAndOj2.setRecentSolvedNumber(0);
-        userAndOj2.setAllContestNumber(0);
-        userAndOj2.setRecentContestNumber(0);
-        userAndOj2.setNowRating(0);
-        userAndOj2.setMaxRating(0);
-        userAndOj2.setRecentMaxRating(0);
         userAndOj2Dao.insert(userAndOj2);
         log.info("{}插入成功",openid);
     }

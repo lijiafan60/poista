@@ -29,12 +29,16 @@ public class AdminService {
     @Resource
     private StrategyDao strategyDao;
 
-    public List<StuInfo> getStuInfo(String name) {
-        String openid = userDao.queryUserByName(name).getOpenId();
+    public List<StuInfo> getStuInfo(String openid) {
 
         String school = userDao.queryUserByOpenid(openid).getSchool();
+
+        log.info("学校为：{}",school);
+
         List<StuInfo> stuInfoList = userRepository.getStuInfo(school);
+
         log.info("根据策略计算pt");
+
         Strategy strategy = strategyDao.getStrategy(school);
         for (StuInfo x : stuInfoList){
             double pt = 0;
@@ -69,10 +73,9 @@ public class AdminService {
 
     /**
      * 更新学生池信息
-     * @param name
+     * @param openid
      */
-    public void updStuStatisticsInfo(String name) {
-        String openid = userDao.queryUserByName(name).getOpenId();
+    public void updStuStatisticsInfo(String openid) {
 
         List<CrawlReq> reqList = userRepository.getStuCrawlReq(openid);
         for(CrawlReq crawlReq:reqList) {

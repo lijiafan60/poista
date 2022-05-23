@@ -104,7 +104,8 @@ public class AdminController {
      */
     @PostMapping("/updateStuStatisticsInfo/{name}")
     public String updateStuStatisticsInfo(@PathVariable String name) {
-        adminService.updStuStatisticsInfo(name);
+        String openid = userDao.queryUserByName(name).getOpenId();
+        adminService.updStuStatisticsInfo(openid);
         return null;
     }
 }

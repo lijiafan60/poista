@@ -2,6 +2,7 @@ package com.ljf.ploughthewaves.domain.poista.service.crwal.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @Service
@@ -27,12 +29,12 @@ public class AtcoderCrawl implements Crawl {
 
     @Override
     @Async("CommonCrawlExecutor")
-    public void doCrawl(CrawlReq crawlReq, CrawlRes atcoder) throws IOException {
+    public void doCrawl(CrawlReq crawlReq, CrawlRes atcoder, CountDownLatch countDownLatch) throws IOException {
 
         atcoder.setUid(crawlReq.getUid());
         atcoder.setOjType(crawlReq.getOjType());
         atcoder.setOjUsername(crawlReq.getOjUsername());
-
+        atcoder.setAllSolvedNumber(crawlReq.getAllSolvedNumber());
         /**
          * 计算总刷题数
          */
@@ -74,7 +76,7 @@ public class AtcoderCrawl implements Crawl {
         el = element.select("tr:contains(Rated Matches)");
 
         atcoder.setAllContestNumber(Integer.parseInt(el.get(0).select("td").get(0).text()));
-        atcoder.setUpdTime(new Date());
 
+        countDownLatch.countDown();
     }
 }

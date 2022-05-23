@@ -73,6 +73,6 @@
     <select id="queryByUserId" parameterType="Integer" resultMap="userAndOj1">
         select ojtype, uid, oj_username, all_solved_number, upd_time
         from ploughthewaves.userandoj1
-        where uid = #{id};
+        where uid = #{uid};
     </select>
 </mapper>

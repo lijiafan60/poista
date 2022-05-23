@@ -13,8 +13,9 @@ public class AsyncConfig {
     @Bean("CodeforcesExecutor")
     public Executor codeforcesExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setQueueCapacity(10);
-        executor.setMaxPoolSize(2);
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(50);
         executor.setKeepAliveSeconds(60);
         return executor;
     }
@@ -22,8 +23,8 @@ public class AsyncConfig {
     @Bean("CommonCrawlExecutor")
     public Executor commonCrawExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(8);
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(20);
         executor.setQueueCapacity(50);
         executor.setKeepAliveSeconds(60);
         return executor;

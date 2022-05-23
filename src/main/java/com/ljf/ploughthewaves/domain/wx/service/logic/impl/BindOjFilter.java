@@ -29,7 +29,7 @@ public class BindOjFilter implements LogicFilter{
         log.info("绑定的ojType为：{}",ojType);
         if(null == ojType) {
             log.error("没找到oj : {}",params[1]);
-            return null;
+            return "暂不支持此OJ";
         }
         if(ojType.intValue() >= 2) wxRepository.addOj1(ojType,params[2],request.getOpenId());
         else wxRepository.addOj2(ojType,params[2],request.getOpenId());

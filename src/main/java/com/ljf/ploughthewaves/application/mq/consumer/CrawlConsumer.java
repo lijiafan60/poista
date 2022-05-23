@@ -1,6 +1,7 @@
 package com.ljf.ploughthewaves.application.mq.consumer;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
 import com.ljf.ploughthewaves.domain.poista.repository.IDoCrawlRepository;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -33,20 +36,33 @@ public class CrawlConsumer {
         if(!message.isPresent()) {
             return;
         }
-        log.info("{}开始消费",Thread.currentThread().getName());
+        log.info("开始消费:{}",Thread.currentThread().getName());
         //处理消息
         try {
             CrawlReq crawlReq = JSON.parseObject((String) message.get(), CrawlReq.class);
+            log.info("更新的oj:{}",crawlReq.getOjType());
+            CrawlRes res = new CrawlRes();
+            CountDownLatch countDownLatch = new CountDownLatch(1);
             if(crawlReq.getOjType() >= 2) {
-                CrawlRes res = new CrawlRes();
-                crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq, res);
-                doCrawlRepository.updateOj1(res);
-                log.info("消费完成 : {}", res);
+                try {
+                    crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq, res, countDownLatch);
+                    countDownLatch.await(100, TimeUnit.SECONDS);
+                    doCrawlRepository.updateOj1(res);
+                    log.info("消费完成 : {}", res);
+                } catch (InterruptedException | JSONException e) {
+                    e.printStackTrace();
+                    log.info("消费失败 : {}", res);
+                }
             } else {
-                CrawlRes res = new CrawlRes();
-                crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq, res);
-                doCrawlRepository.updateOj2(res);
-                log.info("消费完成 : {}", res);
+                try {
+                    crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq, res, countDownLatch);
+                    countDownLatch.await(100, TimeUnit.SECONDS);
+                    doCrawlRepository.updateOj2(res);
+                    log.info("消费完成 : {}", res);
+                } catch (InterruptedException | JSONException e) {
+                    e.printStackTrace();
+                    log.info("消费失败 : {}", res);
+                }
             }
             ack.acknowledge();
         } catch (IOException e) {

@@ -85,24 +85,33 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<StuInfo> getStuInfo(String school) {
         List<User> userList = userDao.queryUserBySchool(school);
+
+        log.info("{}里的学生有：{}",school,userList.toString());
+
         List<StuInfo> stuInfoList = new ArrayList<>();
         for(User x : userList){
+
             StuInfo stuInfo = new StuInfo();
             stuInfo.setName(x.getName());
 
             int cnt = 0;
             List<UserAndOj1> l1 = userAndOj1Dao.queryByUserId(x.getId());
+
+            log.info("学生{}的1类oj信息：{}",x.getName(),l1.toString());
             for (UserAndOj1 userAndOj1:l1) {
                 cnt += userAndOj1.getAllSolvedNumber();
             }
 
             List<UserAndOj2> l2 = userAndOj2Dao.queryByUserId(x.getId());
+
+            log.info("学生{}的2类oj信息：{}",x.getName(),l2.toString());
+
             int cfRecentMaxRating = 0,acMaxRating = 0;
             for (UserAndOj2 userAndOj2:l2) {
                 cnt += userAndOj2.getAllSolvedNumber();
                 int ojtype = userAndOj2.getOjType();
                 if(ojtype == 0) {
-                    if(userAndOj2.getRecentMaxRating() > cfRecentMaxRating) {
+                    if(userAndOj2.getRecentMaxRating() != null && userAndOj2.getRecentMaxRating() > cfRecentMaxRating) {
                         cfRecentMaxRating = userAndOj2.getRecentMaxRating();
                         stuInfo.setCfName(userAndOj2.getOjUsername());
                         stuInfo.setCfRating(userAndOj2.getNowRating());
@@ -112,7 +121,7 @@ public class UserRepository implements IUserRepository {
                         stuInfo.setCfRecentContestNumber(userAndOj2.getRecentContestNumber());
                     }
                 } else {
-                    if(userAndOj2.getMaxRating() > acMaxRating) {
+                    if(userAndOj2.getMaxRating() != null && userAndOj2.getMaxRating() > acMaxRating) {
                         acMaxRating = userAndOj2.getMaxRating();
                         stuInfo.setAcName(userAndOj2.getOjUsername());
                         stuInfo.setAcRating(userAndOj2.getNowRating());

@@ -21,9 +21,9 @@ public interface UserAndOj1Dao {
 
     void deleteByOpenidOjTypeUsername(@Param("ojType") Integer ojType, @Param("ojUsername") String ojUsername,@Param("openid") String openid);
 
-    List<UserAndOj1> queryByUserId(Integer id);
+    List<UserAndOj1> queryByUserId(Integer uid);
 
-    List<UserAndOj1> queryByUidOjType(Integer id,Integer ojType);
+    List<UserAndOj1> queryByUidOjType(Integer uid,Integer ojType);
 
     List<BindInfo> getBindInfo(String openid);
 
