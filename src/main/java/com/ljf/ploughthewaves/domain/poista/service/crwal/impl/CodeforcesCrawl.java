@@ -36,51 +36,50 @@ public class CodeforcesCrawl implements Crawl {
             if (JSONObject.parseObject(run).getString("status").equals("FAILED")) {
                 log.error("用户{}的 {} {} 不存在", crawlReq.getUid(), crawlReq.getOjType(), crawlReq.getOjUsername());
             }
+            JSONArray jsonArray = JSONObject.parseObject(run).getJSONArray("result");
+            int nowTimeSeconds = (int) (System.currentTimeMillis()/1000) , ratingUpdateTimeSeconds , newRating;
+            int cnt = 0;
+            int siz = jsonArray.size();
+            Integer recentMaxRating = 1200,recentContestNumber = 0;
+            for(int i = siz - 1;i >= 0;i --){
+                newRating = jsonArray.getJSONObject(i).getInteger("newRating");
+                ratingUpdateTimeSeconds = jsonArray.getJSONObject(i).getInteger("ratingUpdateTimeSeconds");
+                if(nowTimeSeconds - ratingUpdateTimeSeconds > 2592000) break;
+                if(cnt < 5) {
+                    cnt++;
+                    recentMaxRating = Math.max(recentMaxRating,newRating);
+                }
+                recentContestNumber = recentContestNumber + 1;
+            }
+
+            codeforces.setRecentMaxRating(recentMaxRating);
+            codeforces.setRecentContestNumber(recentContestNumber);
+            codeforces.setAllContestNumber(JSONObject.parseObject(run).getJSONArray("result").size());
+
+            run = okHttpApi.run("https://codeforces.com/api/user.info?handles=" + crawlReq.getOjUsername());
+            jsonArray = JSONObject.parseObject(run).getJSONArray("result");
+
+            codeforces.setMaxRating(jsonArray.getJSONObject(0).getInteger("maxRating"));
+            codeforces.setNowRating(jsonArray.getJSONObject(0).getInteger("rating"));
+
+            run = okHttpApi.run("https://codeforces.com/api/user.status?handle=" + crawlReq.getOjUsername());
+            jsonArray = JSONObject.parseObject(run).getJSONArray("result");
+            Integer allSolvedNumber = 0;
+            for(int i=0;i<jsonArray.size();i++) {
+                if (jsonArray.getJSONObject(i).getString("verdict").equals("OK")) {
+                    allSolvedNumber++;
+                }
+            }
+
+            codeforces.setAllSolvedNumber(allSolvedNumber);
+
+            log.info("更新完成：{}",codeforces.toString());
+            countDownLatch.countDown();
         } catch (Exception e) {
             log.error("codeforces不可用");
             return;
         }
 
-        JSONArray jsonArray = JSONObject.parseObject(run).getJSONArray("result");
-        int nowTimeSeconds = (int) (System.currentTimeMillis()/1000) , ratingUpdateTimeSeconds , newRating;
-        int cnt = 0;
-        int siz = jsonArray.size();
-        Integer recentMaxRating = 1200,recentContestNumber = 0;
-        for(int i = siz - 1;i >= 0;i --){
-            newRating = jsonArray.getJSONObject(i).getInteger("newRating");
-            ratingUpdateTimeSeconds = jsonArray.getJSONObject(i).getInteger("ratingUpdateTimeSeconds");
-            if(nowTimeSeconds - ratingUpdateTimeSeconds > 2592000) break;
-            if(cnt < 5) {
-                cnt++;
-                recentMaxRating = Math.max(recentMaxRating,newRating);
-            }
-            recentContestNumber = recentContestNumber + 1;
-        }
 
-        codeforces.setRecentMaxRating(recentMaxRating);
-        codeforces.setRecentContestNumber(recentContestNumber);
-        codeforces.setAllContestNumber(JSONObject.parseObject(run).getJSONArray("result").size());
-
-        run = okHttpApi.run("https://codeforces.com/api/user.info?handles=" + crawlReq.getOjUsername());
-        jsonArray = JSONObject.parseObject(run).getJSONArray("result");
-
-        codeforces.setMaxRating(jsonArray.getJSONObject(0).getInteger("maxRating"));
-        codeforces.setNowRating(jsonArray.getJSONObject(0).getInteger("rating"));
-
-        run = okHttpApi.run("https://codeforces.com/api/user.status?handle=" + crawlReq.getOjUsername());
-        jsonArray = JSONObject.parseObject(run).getJSONArray("result");
-        Integer allSolvedNumber = 0;
-        for(int i=0;i<jsonArray.size();i++) {
-            if (jsonArray.getJSONObject(i).getString("verdict").equals("OK")) {
-                allSolvedNumber++;
-            }
-        }
-
-        codeforces.setAllSolvedNumber(allSolvedNumber);
-
-
-
-        log.info("更新完成：{}",codeforces.toString());
-        countDownLatch.countDown();
     }
 }

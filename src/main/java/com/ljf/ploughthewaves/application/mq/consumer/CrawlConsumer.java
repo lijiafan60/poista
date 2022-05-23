@@ -49,7 +49,7 @@ public class CrawlConsumer {
                     countDownLatch.await(100, TimeUnit.SECONDS);
                     doCrawlRepository.updateOj1(res);
                     log.info("消费完成 : {}", res);
-                } catch (InterruptedException | JSONException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                     log.info("消费失败 : {}", res);
                 }
