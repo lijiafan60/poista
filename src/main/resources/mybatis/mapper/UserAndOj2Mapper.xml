@@ -5,8 +5,8 @@
 <mapper namespace="com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao">
 
     <insert id="insert" parameterType="com.ljf.ploughthewaves.infrastructure.po.UserAndOj2">
-        insert into ploughthewaves.userandoj2(id, ojtype, uid, oj_username, now_rating, max_rating, recent_max_rating, all_solved_number, recent_solved_number, all_contest_number, recent_contest_number, upd_time)
-        value (#{id},#{ojType},#{uid},#{ojUsername},#{nowRating},#{maxRating},#{recentMaxRating},#{allSolvedNumber},#{recentSolvedNumber},#{allContestNumber},#{recentContestNumber},now());
+        insert into ploughthewaves.userandoj2(ojtype, uid, oj_username, now_rating, max_rating, recent_max_rating, all_solved_number, recent_solved_number, all_contest_number, recent_contest_number, upd_time)
+        value (#{ojType},#{uid},#{ojUsername},#{nowRating},#{maxRating},#{recentMaxRating},#{allSolvedNumber},#{recentSolvedNumber},#{allContestNumber},#{recentContestNumber},now());
     </insert>
 
     <delete id="deleteByUid" parameterType="Integer">

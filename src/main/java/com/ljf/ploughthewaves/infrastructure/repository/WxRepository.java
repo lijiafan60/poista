@@ -47,6 +47,7 @@ public class WxRepository implements IWxRepository {
         user.setIsAdmin(false);
         user.setIsPublic(false);
         user.setRole("ROLE_user");
+        user.setPassword("123456");
         userDao.insert(user);
     }
 
