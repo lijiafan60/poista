@@ -5,6 +5,7 @@ import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
+import com.ljf.ploughthewaves.infrastructure.po.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -81,8 +82,10 @@ public class UserController {
 
     @PostMapping("/setPassword")
     public Integer setPassword(String name,String password) {
-        String openid = userDao.queryUserByName(name).getOpenId();
-
+        log.info("{}正在重设密码：{}",name,password);
+        User user = userDao.queryUserByName(name);
+        if(user == null) return -1;
+        String openid = user.getOpenId();
         if(userService.judgeLegalUser(openid)) {
             log.info("{}正在重设密码",openid);
             userService.setPassword(openid,password);
