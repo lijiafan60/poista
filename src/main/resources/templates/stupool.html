@@ -214,11 +214,14 @@
                                                     <input type="text" class="form-control" name="allSolvedNumber"/>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between flex-wrap">
-                                                <button id="strategySubmit" class="btn btn-primary mt-2 mt-xl-0">提交</button>
-                                            </div>
                                         </div>
-                                        <div class="col-md-6">
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex justify-content-between flex-wrap">
+                                            <button id="strategySubmit" class="btn btn-primary mt-2 mt-xl-0">提交</button>
+                                        </div>
+                                        <div class="d-flex justify-content-between flex-wrap">
+                                            <button id="cancelSetStrategy" class="btn btn-light mt-2 mt-xl-0" type="button">取消</button>
                                         </div>
                                     </div>
                                 </form>
@@ -339,6 +342,9 @@
     })
     $("#strategySubmit").click(function () {
         window.location.reload();
+    })
+    $("#cancelSetStrategy").click(function () {
+        $("#setStrategy").css("display" , "none");
     })
 </script>
 </body>
