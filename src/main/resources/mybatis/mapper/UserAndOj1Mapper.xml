@@ -5,7 +5,7 @@
 <mapper namespace="com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao">
     <insert id="insert" parameterType="com.ljf.ploughthewaves.infrastructure.po.UserAndOj1">
         insert into ploughthewaves.userandoj1(id, ojtype, uid, oj_username, all_solved_number, upd_time)
-        value (#{id},#{ojType},#{uid},#{ojUsername},#{allSolvedNumber},now());
+        value (#{ojType},#{uid},#{ojUsername},#{allSolvedNumber},now());
     </insert>
 
     <delete id="deleteByUid" parameterType="Integer">
