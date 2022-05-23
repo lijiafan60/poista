@@ -40,6 +40,7 @@ public class AdminService {
         log.info("根据策略计算pt");
 
         Strategy strategy = strategyDao.getStrategy(school);
+
         for (StuInfo x : stuInfoList){
             double pt = 0;
             if(x.getAllSolvedNumber() != null && strategy.getAllSolvedNumber() != null)
@@ -60,6 +61,7 @@ public class AdminService {
                 pt += x.getAcMaxRating() * strategy.getAcMaxRating();
             if(x.getAcContestNumber() != null && strategy.getAcContestNumber() != null)
                 pt += x.getAcContestNumber() * strategy.getAcContestNumber();
+
             x.setPt(pt);
         }
         stuInfoList.sort(new Comparator<StuInfo>() {
