@@ -72,8 +72,8 @@ public class CodeforcesCrawl implements Crawl {
         Set<String> acSet = new HashSet<>();
         for(int i=0;i<jsonArray.size();i++) {
             if (jsonArray.getJSONObject(i).getString("verdict").equals("OK")) {
-                JSONArray problem = jsonArray.getJSONObject(i).getJSONArray("problem");
-                acSet.add(problem.getString(0) + problem.getString(1));
+                JSONObject problem = jsonArray.getJSONObject(i).getJSONObject("problem");
+                acSet.add(problem.getString("contestId") + problem.getString("index"));
             }
         }
         codeforces.setAllSolvedNumber(acSet.size());

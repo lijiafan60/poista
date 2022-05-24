@@ -91,6 +91,11 @@ public class CrawlConsumer {
             //todo 异常状态入库
             e.printStackTrace();
             log.info("消费失败 : {}", res);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
         }
         ack.acknowledge();
     }
