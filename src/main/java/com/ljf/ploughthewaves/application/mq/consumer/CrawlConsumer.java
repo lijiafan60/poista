@@ -84,7 +84,7 @@ public class CrawlConsumer {
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
             crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq,res,countDownLatch);
-            doCrawlRepository.updateOj1(res);
+            doCrawlRepository.updateOj2(res);
             log.info("消费完成 : {}", res);
         } catch (Exception e) {
             //todo 异常状态入库
