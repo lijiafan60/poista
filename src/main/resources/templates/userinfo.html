@@ -244,21 +244,21 @@
                     if(msg == 1) location.reload();
                 }
             })
-            let num = 30;
-            $("#upd").text(num + 's');
-            $("#upd").attr('disabled','true');
-            $("#upd").css('cursor','auto');
-            let interval = setInterval(function () {
-                num--;
-                if (num < 0) {
-                    $("#upd").text("更新pt");
-                    $("#upd").removeAttr('disabled');
-                    $("#upd").css('cursor', 'pointer');
-                    clearInterval(interval);
-                } else {
-                    $("#upd").text(num + 's');
-                }
-            }, 1000);
+            // let num = 30;
+            // $("#upd").text(num + 's');
+            // $("#upd").attr('disabled','true');
+            // $("#upd").css('cursor','auto');
+            // let interval = setInterval(function () {
+            //     num--;
+            //     if (num < 0) {
+            //         $("#upd").text("更新pt");
+            //         $("#upd").removeAttr('disabled');
+            //         $("#upd").css('cursor', 'pointer');
+            //         clearInterval(interval);
+            //     } else {
+            //         $("#upd").text(num + 's');
+            //     }
+            // }, 1000);
         })
 
         $("#bindsubmit").click(function () {
@@ -273,7 +273,9 @@
                     if(data == -1) alert("暂不支持此OJ");
                     else if(data == -2) alert("请勿重复绑定");
                     else if(data == -3) alert("用户名不能为空")
-                    else alert("绑定成功")
+                    else {
+                        location.reload();
+                    }
                 }
             })
         })
@@ -290,7 +292,9 @@
                     if(data == -1) alert("暂不支持此OJ");
                     else if(data == -2) alert("未绑定此OJ与用户名");
                     else if(data == -3) alert("用户名不能为空");
-                    else alert("解绑成功")
+                    else {
+                        location.reload();
+                    }
                 }
             })
         })
