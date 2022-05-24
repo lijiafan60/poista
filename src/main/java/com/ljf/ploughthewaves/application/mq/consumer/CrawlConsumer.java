@@ -84,7 +84,6 @@ public class CrawlConsumer {
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
             crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq,res,countDownLatch);
-            countDownLatch.wait(100);
             doCrawlRepository.updateOj1(res);
             log.info("消费完成 : {}", res);
         } catch (Exception e) {
@@ -92,7 +91,7 @@ public class CrawlConsumer {
             e.printStackTrace();
             log.info("消费失败 : {}", res);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
