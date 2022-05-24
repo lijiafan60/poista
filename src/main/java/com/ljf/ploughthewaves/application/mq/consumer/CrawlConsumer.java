@@ -69,4 +69,29 @@ public class CrawlConsumer {
             e.printStackTrace();
         }
     }
+
+    @KafkaListener(topics = "codeforces",groupId = "codeforcesCrawl")
+    public void onCFMessage(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        Optional<?> message = Optional.ofNullable(record.value());
+        if(!message.isPresent()) {
+            return;
+        }
+        log.info("开始消费:{}",Thread.currentThread().getName());
+        //处理消息
+        CrawlReq crawlReq = JSON.parseObject((String) message.get(), CrawlReq.class);
+        log.info("更新的codeforces");
+        CrawlRes res = new CrawlRes();
+        try {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            crawlFactory.crawlConfig.get(crawlReq.ojType).doCrawl(crawlReq,res,countDownLatch);
+            countDownLatch.wait(100);
+            doCrawlRepository.updateOj1(res);
+            log.info("消费完成 : {}", res);
+        } catch (Exception e) {
+            //todo 异常状态入库
+            e.printStackTrace();
+            log.info("消费失败 : {}", res);
+        }
+        ack.acknowledge();
+    }
 }

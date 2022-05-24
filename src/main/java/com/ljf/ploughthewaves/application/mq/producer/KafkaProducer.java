@@ -17,6 +17,7 @@ public class KafkaProducer {
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     public static final String TOPIC_CRAWL = "crawl";
+    public static final String TOPIC_CODEFORCES = "codeforces";
     /**
      * 发送爬虫请求
      * @param crawlReq
@@ -25,6 +26,7 @@ public class KafkaProducer {
     public ListenableFuture<SendResult<String, Object>> sendCrawlReq(CrawlReq crawlReq) {
         String obJson = JSON.toJSONString(crawlReq);
         log.info("发送爬虫请求：topic：{}，message：{}",TOPIC_CRAWL,obJson);
-        return kafkaTemplate.send(TOPIC_CRAWL,obJson);
+        if(crawlReq.getOjType() != 0) return kafkaTemplate.send(TOPIC_CRAWL,obJson);
+        else return kafkaTemplate.send(TOPIC_CODEFORCES,obJson);
     }
 }

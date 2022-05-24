@@ -1,16 +1,12 @@
 package com.ljf.ploughthewaves.interfaces;
 
 import com.ljf.ploughthewaves.domain.admin.model.vo.OjInfo;
-import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
-import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -49,11 +45,11 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateStatisticsInfo")
-    public String update(@RequestParam String name) {
+    public Integer update(@RequestParam String name) {
         log.info("{}正在更新统计信息",name);
         String openid = userDao.queryUserByName(name).getOpenId();
         userService.updateStatisticsInfo(openid);
-        return null;
+        return 1;
     }
 
     /**
@@ -110,6 +106,7 @@ public class UserController {
 
     @PostMapping("/bindOjInfo")
     public Integer bindOjInfo(String name,String ojName,String ojUsername) {
+        if(ojUsername == "") return -3;
         Integer ojType = OjFilter.NameToType.get(ojName);
         if(ojType == null) {
             log.error("{} oj没找到",ojName);
@@ -120,6 +117,7 @@ public class UserController {
 
     @PostMapping("/unBindOjInfo")
     public Integer unBindOjInfo(String name,String ojName,String ojUsername) {
+        if(ojUsername == "") return -3;
         Integer ojType = OjFilter.NameToType.get(ojName);
         if(ojType == null) {
             log.error("{} oj没找到",ojName);

@@ -3,11 +3,9 @@ package com.ljf.ploughthewaves.interfaces;
 import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
 import com.ljf.ploughthewaves.domain.admin.service.AdminService;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
-import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.Strategy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

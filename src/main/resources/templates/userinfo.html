@@ -241,6 +241,7 @@
                     "name" : $("#authname").html()
                 },
                 success(msg) {
+                    if(msg == 1) location.reload();
                 }
             })
             let num = 30;
@@ -271,6 +272,7 @@
                 success: function (data) {
                     if(data == -1) alert("暂不支持此OJ");
                     else if(data == -2) alert("请勿重复绑定");
+                    else if(data == -3) alert("用户名不能为空")
                     else alert("绑定成功")
                 }
             })
@@ -287,6 +289,7 @@
                 success: function (data) {
                     if(data == -1) alert("暂不支持此OJ");
                     else if(data == -2) alert("未绑定此OJ与用户名");
+                    else if(data == -3) alert("用户名不能为空");
                     else alert("解绑成功")
                 }
             })
