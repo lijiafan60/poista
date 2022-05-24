@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -24,7 +26,7 @@ public class CodeforcesCrawl implements Crawl {
     private OkHttpApi okHttpApi;
 
     @Override
-    @Async("CodeforcesExecutor")
+//    @Async("CodeforcesExecutor")
     public void doCrawl(CrawlReq crawlReq, CrawlRes codeforces,CountDownLatch countDownLatch) throws IOException{
         String run;
         try {
@@ -56,7 +58,7 @@ public class CodeforcesCrawl implements Crawl {
             codeforces.setRecentContestNumber(recentContestNumber);
             codeforces.setAllContestNumber(JSONObject.parseObject(run).getJSONArray("result").size());
 
-            Thread.sleep(200);
+//            Thread.sleep(200);
 
             run = okHttpApi.run("https://codeforces.com/api/user.info?handles=" + crawlReq.getOjUsername());
             jsonArray = JSONObject.parseObject(run).getJSONArray("result");
@@ -64,18 +66,18 @@ public class CodeforcesCrawl implements Crawl {
             codeforces.setMaxRating(jsonArray.getJSONObject(0).getInteger("maxRating"));
             codeforces.setNowRating(jsonArray.getJSONObject(0).getInteger("rating"));
 
-            Thread.sleep(200);
+//            Thread.sleep(200);
 
             run = okHttpApi.run("https://codeforces.com/api/user.status?handle=" + crawlReq.getOjUsername());
             jsonArray = JSONObject.parseObject(run).getJSONArray("result");
-            Integer allSolvedNumber = 0;
+            Set<String> acSet = new HashSet<>();
             for(int i=0;i<jsonArray.size();i++) {
                 if (jsonArray.getJSONObject(i).getString("verdict").equals("OK")) {
-                    allSolvedNumber++;
+                    JSONArray problem = jsonArray.getJSONObject(i).getJSONArray("problem");
+                    acSet.add(problem.getString(0) + problem.getString(1));
                 }
             }
-
-            codeforces.setAllSolvedNumber(allSolvedNumber);
+            codeforces.setAllSolvedNumber(acSet.size());
 
             log.info("更新完成：{}",codeforces.toString());
             countDownLatch.countDown();

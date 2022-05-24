@@ -9,6 +9,7 @@ import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
