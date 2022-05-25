@@ -5,6 +5,7 @@ import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.User;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,9 @@ import java.util.List;
 public class UserService {
     @Resource
     private IUserRepository userRepository;
-    @Resource
-    private UserDao userDao;
 
-    public void updateStatisticsInfo(String openid) {
-        userRepository.updateStatisticsInfo(openid);
-    }
-
-    public boolean isAdmin(String openid,String school) {
-        User user = userRepository.getUserByOpenid(openid);
-        return (user.getIsAdmin().booleanValue() && user.getSchool().equals(school));
+    public void updateStatisticsInfo(Integer uid) {
+        userRepository.updateStatisticsInfo(uid);
     }
 
     public List<OjInfo> getStatisticsInfo(String openid) {
@@ -36,11 +30,10 @@ public class UserService {
         return ojInfoList;
     }
 
-    public Integer judgeUnregisteredUser(String openid) {
-        User user = userRepository.getUserByOpenid(openid);
+    public Integer judgeUnregisteredUser(User user) {
         if(user == null) return -1;
         if(user.getPassword() != null && !user.getPassword().equals("")) {
-            log.info("{}请求注册，但已有密码：{}",openid,user.getPassword());
+            log.info("{}请求注册，但已有密码：{}",user.getId(),user.getPassword());
             return -2;
         }
         return 1;
@@ -50,12 +43,8 @@ public class UserService {
         userRepository.setPassword(openid,password);
     }
 
-    public boolean judgeLegalUser(String openid) {
-        return (userRepository.getUserByOpenid(openid) != null);
-    }
-
     public Integer bindOjInfo(String name,Integer ojType,String ojUsername) {
-        User user = userDao.queryUserByName(name);
+        User user = userRepository.findUserByUsername(name);
         String openid = user.getOpenId();
         Integer uid = user.getId();
         if(userRepository.getBindInfo(uid,ojType,ojUsername) != null) {
@@ -68,7 +57,7 @@ public class UserService {
     }
 
     public Integer unBindOjInfo(String name,Integer ojType,String ojUsername) {
-        User user = userDao.queryUserByName(name);
+        User user = userRepository.findUserByUsername(name);
         String openid = user.getOpenId();
         Integer uid = user.getId();
         if(userRepository.getBindInfo(uid,ojType,ojUsername) == null) {

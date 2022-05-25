@@ -5,6 +5,7 @@ import com.ljf.ploughthewaves.domain.wx.model.MessageTextEntity;
 import com.ljf.ploughthewaves.domain.wx.service.top.IWxReceiveService;
 import com.ljf.ploughthewaves.domain.wx.service.top.IWxValidateService;
 import com.ljf.ploughthewaves.domain.wx.utils.XmlUtil;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,8 @@ public class WxPortalController {
     private IWxValidateService wxValidateService;
     @Resource
     private IWxReceiveService wxReceiveService;
-
+    @Resource
+    private RedisUtil redisUtil;
     /**
      * 处理微信服务器发来的get请求，进行签名的验证
      * <p>
@@ -59,7 +61,16 @@ public class WxPortalController {
     }
 
     /**
-     * 此处是处理微信服务器的消息转发的
+     * 处理微信服务器的消息转发
+     * @param appid
+     * @param requestBody
+     * @param signature
+     * @param timestamp
+     * @param nonce
+     * @param openid
+     * @param encType
+     * @param msgSignature
+     * @return
      */
     @PostMapping(produces = "application/xml; charset=UTF-8")
     public String post(@PathVariable String appid,
@@ -73,17 +84,23 @@ public class WxPortalController {
         try {
             logger.info("接收微信公众号信息请求{}开始 {}", openid, requestBody);
             MessageTextEntity message = XmlUtil.xmlToBean(requestBody, MessageTextEntity.class);
-            BehaviorMatter behaviorMatter = new BehaviorMatter();
-            behaviorMatter.setOpenId(openid);
-            behaviorMatter.setFromUserName(message.getFromUserName());
-            behaviorMatter.setMsgType(message.getMsgType());
-            behaviorMatter.setContent(StringUtils.isBlank(message.getContent()) ? null : message.getContent().trim());
-            behaviorMatter.setEvent(message.getEvent());
-            behaviorMatter.setCreateTime(new Date(Long.parseLong(message.getCreateTime()) * 1000L));
-            // 处理消息
-            String result = wxReceiveService.doReceive(behaviorMatter);
-            logger.info("接收微信公众号信息请求{}完成 {}", openid, result);
-            return result;
+            if(redisUtil.get(message.getMsgId()) == null) {
+                BehaviorMatter behaviorMatter = new BehaviorMatter();
+                behaviorMatter.setOpenId(openid);
+                behaviorMatter.setFromUserName(message.getFromUserName());
+                behaviorMatter.setMsgType(message.getMsgType());
+                behaviorMatter.setContent(StringUtils.isBlank(message.getContent()) ? null : message.getContent().trim());
+                behaviorMatter.setEvent(message.getEvent());
+                behaviorMatter.setCreateTime(new Date(Long.parseLong(message.getCreateTime()) * 1000L));
+                // 处理消息
+                String result = wxReceiveService.doReceive(behaviorMatter);
+                redisUtil.set(message.getMsgId(),"1",5);
+                logger.info("接收微信公众号信息请求{}完成 {}", openid, result);
+                return result;
+            } else {
+                logger.info("微信公众号请求重复:MsgId:{},Content:{}",message.getMsgId(),requestBody);
+                return "";
+            }
         } catch (Exception e) {
             logger.error("接收微信公众号信息请求{}失败 {}", openid, requestBody, e);
             return "";

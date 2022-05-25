@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 public class UnBindOjFilter implements LogicFilter {
     @Resource
     private IWxRepository wxRepository;
+
     @Override
     public String filter(BehaviorMatter request) {
         String params[] = request.getContent().split(" ");

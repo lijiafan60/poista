@@ -6,6 +6,7 @@ import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.poista.service.util.SolvedNumbersApi;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.User;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,9 @@ public class UserController {
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     /**
      * 匿名用户获取刷题数
      * @param ojName
@@ -46,9 +50,16 @@ public class UserController {
      */
     @PostMapping("/updateStatisticsInfo")
     public Integer update(@RequestParam String name) {
-        log.info("{}正在更新统计信息",name);
-        String openid = userDao.queryUserByName(name).getOpenId();
-        userService.updateStatisticsInfo(openid);
+        if(name == null) return null;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userDao.queryUserByName(name);
+            if(user == null) return -1;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
+        }
+        log.info("用户{}正在更新统计信息",user.getId());
+        userService.updateStatisticsInfo(user.getId());
         return 1;
     }
 
@@ -59,8 +70,16 @@ public class UserController {
      */
     @PostMapping("/getStatisticsInfo")
     public List<OjInfo> get(@RequestParam String name) {
-        log.info("{}正在获取统计信息",name);
-        String openid = userDao.queryUserByName(name).getOpenId();
+        if(name == null) return null;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userDao.queryUserByName(name);
+            if(user == null) return null;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
+        }
+        String openid = user.getOpenId();
+        log.info("用户({}.{})正在获取统计信息",openid,name);
         return userService.getStatisticsInfo(openid);
     }
 
@@ -72,13 +91,18 @@ public class UserController {
      */
     @PostMapping("/register")
     public Integer register(String name,String password) {
-        String openid = userDao.queryUserByName(name).getOpenId();
-
-        Integer x = userService.judgeUnregisteredUser(openid);
+        if(name == null) return -1;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userDao.queryUserByName(name);
+            if(user == null) return -1;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
+        }
+        Integer x = userService.judgeUnregisteredUser(user);
         if(x == 1) {
-            log.info("{}正在注册",openid);
-            userService.setPassword(openid,password);
-            return 1;
+            log.info("{}正在注册",user.getId());
+            userService.setPassword(user.getOpenId(),password);
         }
         return x;
     }
@@ -91,32 +115,34 @@ public class UserController {
      */
     @PostMapping("/setPassword")
     public Integer setPassword(String name,String password) {
-        log.info("{}正在重设密码：{}",name,password);
-        User user = userDao.queryUserByName(name);
-        if(user == null) return -1;
-        String openid = user.getOpenId();
-        if(userService.judgeLegalUser(openid)) {
-            log.info("{}正在重设密码",openid);
-            userService.setPassword(openid,password);
-            return 1;
+        if(name == null) return -1;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userDao.queryUserByName(name);
+            if(user == null) return -1;
+            user.setPassword(password);
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
         }
-        return -1;
+        String openid = user.getOpenId();
+        log.info("{}正在重设密码",openid);
+        userService.setPassword(openid,password);
+        return 1;
     }
 
 
     @PostMapping("/bindOjInfo")
     public Integer bindOjInfo(String name,String ojName,String ojUsername) {
+        if(name == null) return -98;
         if(ojUsername == "") return -3;
         Integer ojType = OjFilter.NameToType.get(ojName);
-        if(ojType == null) {
-            log.error("{} oj没找到",ojName);
-            return -1;
-        }
+        if(ojType == null) return -1;
         return userService.bindOjInfo(name, OjFilter.NameToType.get(ojName),ojUsername);
     }
 
     @PostMapping("/unBindOjInfo")
     public Integer unBindOjInfo(String name,String ojName,String ojUsername) {
+        if(name == null) return -98;
         if(ojUsername == "") return -3;
         Integer ojType = OjFilter.NameToType.get(ojName);
         if(ojType == null) {

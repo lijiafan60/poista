@@ -13,7 +13,7 @@ import java.util.List;
 public interface IUserRepository {
     User findUserByUsername(String name);
     List<CrawlReq> getStuCrawlReq(String openid);
-    void updateStatisticsInfo(String openid);
+    void updateStatisticsInfo(Integer uid);
     List<StuInfo> getStuInfo(String school);
     User getUserByOpenid(String openid);
     void setStatisticsStrategy(Strategy strategy, String school);

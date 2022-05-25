@@ -11,6 +11,7 @@ import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
 import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,8 @@ public class WxRepository implements IWxRepository {
     private UserAndOj2Dao userAndOj2Dao;
     @Resource
     private KafkaProducer kafkaProducer;
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * 用户订阅时添加用户
@@ -41,14 +44,19 @@ public class WxRepository implements IWxRepository {
      */
     @Override
     public void addUser(String openid) {
-        User user = new User();
+
+        User user = userDao.queryUserByOpenid(openid);
+        if(user != null) userDao.delete(user.getId());
+
+        user = new User();
         user.setOpenId(openid);
         user.setName(openid.substring(5));
         user.setIsAdmin(false);
         user.setIsPublic(false);
         user.setRole("ROLE_user");
-        user.setPassword("123456");
         userDao.insert(user);
+        redisUtil.set(openid, user);
+        redisUtil.set(user.getName(), user);
     }
 
     /**
@@ -57,7 +65,13 @@ public class WxRepository implements IWxRepository {
      */
     @Override
     public void deleteUser(String openid) {
-        Integer id = userDao.queryUserIdByOpenId(openid);
+        User user = (User) redisUtil.get(openid);
+        if(user == null) {
+            user = userDao.queryUserByOpenid(openid);
+        }
+        String name = user.getName();
+        Integer id = user.getId();
+        redisUtil.del(openid,name);
         log.info("删除的用户id为：{}",id);
         userDao.delete(id);
         log.info("user表删除成功");
@@ -116,6 +130,7 @@ public class WxRepository implements IWxRepository {
         user.setSchool(school);
         user.setIsPublic(Boolean.TRUE);
         userDao.setDetailInfo(user);
+        redisUtil.del(name,openid);
         return 1;
     }
 

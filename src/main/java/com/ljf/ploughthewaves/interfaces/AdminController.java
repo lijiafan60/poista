@@ -1,10 +1,14 @@
 package com.ljf.ploughthewaves.interfaces;
 
 import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
+import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.AdminService;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.Strategy;
+import com.ljf.ploughthewaves.infrastructure.po.User;
+import com.ljf.ploughthewaves.infrastructure.repository.UserRepository;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +21,11 @@ import java.util.List;
 public class AdminController {
 
     @Resource
-    public AdminService adminService;
-
+    private AdminService adminService;
     @Resource
-    public UserService userService;
-
+    private IUserRepository userRepository;
     @Resource
-    public UserDao userDao;
+    private RedisUtil redisUtil;
     /**
      * 管理员获取本校学生信息
      * @param name
@@ -31,13 +33,18 @@ public class AdminController {
      */
     @PostMapping("/getStuInfo")
     public List<StuInfo> getStuInfo(@RequestParam String name) {
-        log.info("{}正在获取本校学生信息",name);
-        log.info("正在验证{}管理员身份",name);
-        String openid = userDao.queryUserByName(name).getOpenId();
-        if(!adminService.isAdmin(openid)) {
-            return null;
+        if(name == null) return null;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userRepository.findUserByUsername(name);
+            if(user == null) return null;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
         }
-        log.info("验证通过");
+        if(user.getIsAdmin() == Boolean.FALSE) return null;
+        String openid = user.getOpenId();
+        if(!adminService.isAdmin(openid)) return null;
+        log.info("用户({},{})正在获取本校学生信息",openid,name);
         return adminService.getStuInfo(openid);
     }
 
@@ -61,12 +68,18 @@ public class AdminController {
                                         Double cfContestNumber, Double cfRecentContestNumber,
                                         Double acRating, Double acMaxRating, Double acContestNumber,
                                         Double allSolvedNumber) {
-        String openid = userDao.queryUserByName(name).getOpenId();
-
-        String school = userDao.queryUserByOpenid(openid).getSchool();
-        log.info("{}正在设置{}的统计策略",openid,school);
-        if(!userService.isAdmin(openid,school)) return "-1";
-        log.info("{}用户在{}的管理员身份验证通过",openid,school);
+        if(name == null) return null;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userRepository.findUserByUsername(name);
+            if(user == null) return null;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
+        }
+        if(user.getIsAdmin() == Boolean.FALSE) return null;
+        String openid = user.getOpenId();
+        String school = user.getSchool();
+        log.info("{}正在设置{}学校的统计策略",openid,school);
         Strategy strategy = new Strategy();
         strategy.setSchool(school);
         strategy.setCfRating(cfRating);
@@ -79,7 +92,7 @@ public class AdminController {
         strategy.setAcContestNumber(acContestNumber);
         strategy.setAllSolvedNumber(allSolvedNumber);
         adminService.setStatisticsStrategy(strategy,school);
-        return "1";
+        return "success";
     }
 
 
@@ -102,8 +115,16 @@ public class AdminController {
      */
     @PostMapping("/updateStuStatisticsInfo/{name}")
     public String updateStuStatisticsInfo(@PathVariable String name) {
-        String openid = userDao.queryUserByName(name).getOpenId();
+        if(name == null) return null;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userRepository.findUserByUsername(name);
+            if(user == null) return null;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
+        }
+        String openid = user.getOpenId();
         adminService.updStuStatisticsInfo(openid);
-        return null;
+        return "success";
     }
 }

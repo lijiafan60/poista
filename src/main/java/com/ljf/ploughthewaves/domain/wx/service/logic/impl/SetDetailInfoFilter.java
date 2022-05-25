@@ -3,6 +3,7 @@ package com.ljf.ploughthewaves.domain.wx.service.logic.impl;
 import com.ljf.ploughthewaves.domain.wx.model.BehaviorMatter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
 import com.ljf.ploughthewaves.domain.wx.service.logic.LogicFilter;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ import javax.annotation.Resource;
 public class SetDetailInfoFilter implements LogicFilter {
     @Resource
     private IWxRepository wxRepository;
+    @Resource
+    private RedisUtil redisUtil;
+
     @Override
     public String filter(BehaviorMatter request) {
         String params[] = request.getContent().split(" ");
@@ -32,7 +36,7 @@ public class SetDetailInfoFilter implements LogicFilter {
             log.info("{}设置失败,该用户名已存在",request.getOpenId());
             return "设置失败,用户名已存在";
         } else {
-            log.error("{}设置失败，原因位置！！",request.getOpenId());
+            log.error("{}设置失败，原因未知！！",request.getOpenId());
             return "设置失败";
         }
     }

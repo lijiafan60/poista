@@ -10,6 +10,7 @@ import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.*;
+import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,8 @@ public class UserRepository implements IUserRepository {
     private StrategyDao strategyDao;
     @Resource
     private KafkaProducer kafkaProducer;
+    @Resource
+    private RedisUtil redisUtil;
 
     @Override
     public User findUserByUsername(String name) {
@@ -53,12 +56,11 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void updateStatisticsInfo(String openid) {
+    public void updateStatisticsInfo(Integer uid) {
         log.info("更新统计信息");
-        User user = userDao.queryUserByOpenid(openid);
 
-        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByUid(user.getId());
-        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByUid(user.getId());
+        List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByUid(uid);
+        List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByUid(uid);
         list1.addAll(list2);
 
         for(CrawlReq crawlReq : list1) {
