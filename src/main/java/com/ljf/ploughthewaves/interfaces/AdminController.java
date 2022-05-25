@@ -1,6 +1,8 @@
 package com.ljf.ploughthewaves.interfaces;
 
+import com.alibaba.excel.EasyExcel;
 import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfo;
+import com.ljf.ploughthewaves.domain.admin.model.vo.StuInfoExcel;
 import com.ljf.ploughthewaves.domain.admin.repository.IUserRepository;
 import com.ljf.ploughthewaves.domain.admin.service.AdminService;
 import com.ljf.ploughthewaves.domain.admin.service.UserService;
@@ -13,6 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -42,10 +50,9 @@ public class AdminController {
             redisUtil.set(user.getOpenId(),user);
         }
         if(user.getIsAdmin() == Boolean.FALSE) return null;
-        String openid = user.getOpenId();
-        if(!adminService.isAdmin(openid)) return null;
-        log.info("用户({},{})正在获取本校学生信息",openid,name);
-        return adminService.getStuInfo(openid);
+
+        log.info("用户({},{})正在获取本校学生信息",user.getOpenId(),name);
+        return adminService.getStuInfo(user.getSchool());
     }
 
     /**
@@ -99,12 +106,49 @@ public class AdminController {
     /**
      * 获取excel
      * @param name
-     * @param school
      * @return
      */
-    @PostMapping("/getExcel/{name}/{school}")
-    public String getExcel(@PathVariable String name, @PathVariable String school) {
-        return null;
+    @GetMapping("/getExcel")
+    public void getExcel(@RequestParam String name, HttpServletResponse response) throws IOException {
+        if(name == null) return;
+        User user = (User) redisUtil.get(name);
+        if(user == null) {
+            user = userRepository.findUserByUsername(name);
+            if(user == null) return;
+            redisUtil.set(name,user);
+            redisUtil.set(user.getOpenId(),user);
+        }
+        if(user.getIsAdmin() == Boolean.FALSE) return;
+        String school = user.getSchool();
+        //设置返回的数据格式
+        response.setContentType("application/vnd.ms-excel");
+        //设置返回的数据编码
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码 和easyexcel没有关系
+        String fileName = URLEncoder.encode(school+"统计数据", "UTF-8");
+        response.setHeader("Content-disposition", "attachment;filename="+ fileName + ".xlsx");
+
+        List<StuInfoExcel> stuInfoExcelList = new ArrayList<>();
+        List<StuInfo> stuInfoList = adminService.getStuInfo(school);
+        int siz = stuInfoList.size();
+        for(int i=0;i<siz;i++) {
+            StuInfoExcel stuInfoExcel = new StuInfoExcel();
+            stuInfoExcel.setIdx(i);
+            stuInfoExcel.setName(stuInfoList.get(i).getName());
+            stuInfoExcel.setCfName(stuInfoList.get(i).getCfName());
+            stuInfoExcel.setCfRating(stuInfoList.get(i).getCfRating());
+            stuInfoExcel.setCfMaxRating(stuInfoList.get(i).getCfMaxRating());
+            stuInfoExcel.setCfRecentMaxRating(stuInfoList.get(i).getCfRecentMaxRating());
+            stuInfoExcel.setCfContestNumber(stuInfoList.get(i).getCfContestNumber());
+            stuInfoExcel.setCfRecentContestNumber(stuInfoList.get(i).getCfRecentContestNumber());
+            stuInfoExcel.setAcName(stuInfoList.get(i).getAcName());
+            stuInfoExcel.setAcRating(stuInfoList.get(i).getAcRating());
+            stuInfoExcel.setAcMaxRating(stuInfoList.get(i).getAcMaxRating());
+            stuInfoExcel.setAcContestNumber(stuInfoList.get(i).getAcContestNumber());
+            stuInfoExcel.setPt(stuInfoList.get(i).getPt());
+            stuInfoExcelList.add(stuInfoExcel);
+        }
+        EasyExcel.write(response.getOutputStream(),StuInfoExcel.class).sheet(school+"统计数据").doWrite(stuInfoExcelList);
     }
 
 

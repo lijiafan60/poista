@@ -92,6 +92,7 @@ public class WxRepository implements IWxRepository {
         List<CrawlReq> list1 = userAndOj1Dao.getCrawlReqListByUid(user.getId());
         List<CrawlReq> list2 = userAndOj2Dao.getCrawlReqListByUid(user.getId());
         list1.addAll(list2);
+
         /**
          * 发送mq
          */

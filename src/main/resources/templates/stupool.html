@@ -331,6 +331,9 @@
             }
         }, 1000);
     });
+    $("#excel").click(function () {
+        window.location.href = "/admin/getExcel?name=" + $("#authname").html();
+    })
 
     $("#strategy").click(function () {
         if($("#setStrategy").css("display") == 'none') $("#setStrategy").css("display" , "block");

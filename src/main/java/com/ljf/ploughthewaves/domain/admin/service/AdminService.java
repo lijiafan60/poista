@@ -29,9 +29,7 @@ public class AdminService {
     @Resource
     private StrategyDao strategyDao;
 
-    public List<StuInfo> getStuInfo(String openid) {
-
-        String school = userDao.queryUserByOpenid(openid).getSchool();
+    public List<StuInfo> getStuInfo(String school) {
 
         log.info("学校为：{}",school);
 
@@ -64,12 +62,7 @@ public class AdminService {
 
             x.setPt(pt);
         }
-        stuInfoList.sort(new Comparator<StuInfo>() {
-            @Override
-            public int compare(StuInfo o1, StuInfo o2) {
-                return o2.getPt().compareTo(o1.getPt());
-            }
-        });
+        stuInfoList.sort((o1, o2) -> o2.getPt().compareTo(o1.getPt()));
         return stuInfoList;
     }
 
@@ -105,9 +98,5 @@ public class AdminService {
      */
     public void setStatisticsStrategy(Strategy strategy, String school) {
         userRepository.setStatisticsStrategy(strategy,school);
-    }
-
-    public boolean isAdmin(String openid) {
-        return userDao.queryUserByOpenid(openid).getIsAdmin();
     }
 }
