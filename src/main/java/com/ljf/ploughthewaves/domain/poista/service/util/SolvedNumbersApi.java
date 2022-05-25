@@ -3,6 +3,7 @@ package com.ljf.ploughthewaves.domain.poista.service.util;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ public class SolvedNumbersApi {
 
     @Resource
     private OkHttpApi okHttpApi;
+    @Async("CommonCrawlExecutor")
     public int getSolvedNumbers(String OJ, String username) throws IOException {
         String run = okHttpApi.run("https://ojhunt.com/api/crawlers/" + OJ + "/" + username);
         if(JSONObject.parseObject(run).getString("error").equals("false")) {
