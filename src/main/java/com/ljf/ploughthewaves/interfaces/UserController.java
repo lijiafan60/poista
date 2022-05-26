@@ -8,11 +8,13 @@ import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
 import com.ljf.ploughthewaves.infrastructure.po.User;
 import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @RestController
@@ -38,7 +40,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/getSolvedNumber")
-    public int getSolvedNumber(String ojName, String handle) throws IOException {
+    public Integer getSolvedNumber(String ojName, String handle) throws IOException, InterruptedException {
         log.info("匿名用户查询:{} - {}",ojName,handle);
         return solvedNumbersApi.getSolvedNumbers(ojName, handle);
     }

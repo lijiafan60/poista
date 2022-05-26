@@ -9,17 +9,17 @@ import java.util.Map;
 public class OjFilter {
     public static Map<String,Integer> NameToType = new HashMap<String,Integer>() {
         {
-            put("codeforces",Integer.valueOf(0));
-            put("atcoder",Integer.valueOf(1));
-            put("vjudge",Integer.valueOf(2));
+            put("codeforces", 0);
+            put("atcoder", 1);
+            put("vjudge", 2);
         }
     };
 
     public static Map<Integer,String> TypeToName = new HashMap<Integer,String>() {
         {
-            put(Integer.valueOf(0),"codeforces");
-            put(Integer.valueOf(1),"atcoder");
-            put(Integer.valueOf(2),"vjudge");
+            put(0,"codeforces");
+            put(1,"atcoder");
+            put(2,"vjudge");
         }
     };
 

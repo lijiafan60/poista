@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @Component
@@ -16,8 +17,9 @@ public class SolvedNumbersApi {
 
     @Resource
     private OkHttpApi okHttpApi;
-    @Async("CommonCrawlExecutor")
+
     public int getSolvedNumbers(String OJ, String username) throws IOException {
+        if(username.equals("") || OjFilter.NameToType.get(OJ) == null) return -1;
         String run = okHttpApi.run("https://ojhunt.com/api/crawlers/" + OJ + "/" + username);
         if(JSONObject.parseObject(run).getString("error").equals("false")) {
             return JSONObject.parseObject(run).getJSONObject("data").getInteger("solved");

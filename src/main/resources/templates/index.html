@@ -199,28 +199,32 @@
     $(function (){
         var sum = 0;
         $("#inlineSubmit").click(function () {
-            $.post({
-                url:"/user/getSolvedNumber",
-                data:{
-                    "ojName":$("#inlineFormInputName1").val(),
-                    "handle":$("#inlineFormInputName2").val()
-                },
-                success: function (data) {
-                    if (data == -1) {
-                        alert("OJ或用户名输入错误！");
-                    } else {
-                        sum = sum + parseInt(data);
-                        $("#sum_number").html(sum);
-                        var html =
-                            "<tr>" +
-                            "<td>" + $("#inlineFormInputName1").val() + "</td>" +
-                            "<td>" + $("#inlineFormInputName2").val() + "</td>" +
-                            "<td>" + data + "</td> " +
-                            "</tr>";
-                        $("#content").append(html);
+            if($("#inlineFormInputName1").val() == "" || $("#inlineFormInputName2").val() == "") {
+                alert("OJ或用户名输入错误!");
+            } else {
+                $.post({
+                    url: "/user/getSolvedNumber",
+                    data: {
+                        "ojName": $("#inlineFormInputName1").val(),
+                        "handle": $("#inlineFormInputName2").val()
+                    },
+                    success: function (data) {
+                        if (data == -1) {
+                            alert("OJ或用户名输入错误!");
+                        } else {
+                            sum = sum + data;
+                            $("#sum_number").html(sum);
+                            var html =
+                                "<tr>" +
+                                "<td>" + $("#inlineFormInputName1").val() + "</td>" +
+                                "<td>" + $("#inlineFormInputName2").val() + "</td>" +
+                                "<td>" + data + "</td> " +
+                                "</tr>";
+                            $("#content").append(html);
+                        }
                     }
-                }
-            });
+                });
+            }
         })
     });
 
