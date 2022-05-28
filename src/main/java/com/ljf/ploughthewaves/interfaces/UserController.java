@@ -117,7 +117,8 @@ public class UserController {
      */
     @PostMapping("/setPassword")
     public Integer setPassword(String name,String password) {
-        if(name == null) return -1;
+        if(name == null|| name.equals("")) return -1;
+        if(password == null || password.equals("")) return -2;
         User user = (User) redisUtil.get(name);
         if(user == null) {
             user = userDao.queryUserByName(name);

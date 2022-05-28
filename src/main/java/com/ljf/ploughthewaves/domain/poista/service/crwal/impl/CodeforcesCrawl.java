@@ -7,14 +7,15 @@ import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.model.res.CrawlRes;
 import com.ljf.ploughthewaves.domain.poista.service.crwal.Crawl;
 import com.ljf.ploughthewaves.domain.poista.service.util.OkHttpApi;
+import com.ljf.ploughthewaves.infrastructure.dao.TagsStatisticsDao;
+import com.ljf.ploughthewaves.infrastructure.po.TagsStatistics;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -24,9 +25,10 @@ public class CodeforcesCrawl implements Crawl {
 
     @Resource
     private OkHttpApi okHttpApi;
+    @Resource
+    private TagsStatisticsDao tagsStatisticsDao;
 
     @Override
-//    @Async("CodeforcesExecutor")
     public void doCrawl(CrawlReq crawlReq, CrawlRes codeforces,CountDownLatch countDownLatch) throws IOException,JSONException{
         String run;
         codeforces.setUid(crawlReq.getUid());
@@ -57,7 +59,6 @@ public class CodeforcesCrawl implements Crawl {
         codeforces.setRecentContestNumber(recentContestNumber);
         codeforces.setAllContestNumber(JSONObject.parseObject(run).getJSONArray("result").size());
 
-//            Thread.sleep(200);
 
         run = okHttpApi.run("https://codeforces.com/api/user.info?handles=" + crawlReq.getOjUsername());
         jsonArray = JSONObject.parseObject(run).getJSONArray("result");
@@ -65,20 +66,41 @@ public class CodeforcesCrawl implements Crawl {
         codeforces.setMaxRating(jsonArray.getJSONObject(0).getInteger("maxRating"));
         codeforces.setNowRating(jsonArray.getJSONObject(0).getInteger("rating"));
 
-//            Thread.sleep(200);
 
         run = okHttpApi.run("https://codeforces.com/api/user.status?handle=" + crawlReq.getOjUsername());
         jsonArray = JSONObject.parseObject(run).getJSONArray("result");
+
+        TagsStatistics tagsStatistics = new TagsStatistics();
         Set<String> acSet = new HashSet<>();
+        int math = 0,greedy = 0,graphs = 0,bruteforce = 0,dataStructure = 0,dp = 0;
         for(int i=0;i<jsonArray.size();i++) {
             if (jsonArray.getJSONObject(i).getString("verdict").equals("OK")) {
                 JSONObject problem = jsonArray.getJSONObject(i).getJSONObject("problem");
-                acSet.add(problem.getString("contestId") + problem.getString("index"));
+                String tmp = problem.getString("contestId") + problem.getString("index");
+                if(!acSet.contains(tmp)) {
+                    List<String> tags = problem.getJSONArray("tags").toJavaList(String.class);
+                    for(String x : tags) {
+                        if(x.equals("greedy")) greedy++;
+                        else if(x.equals("math")) math++;
+                        else if(x.equals("graphs")) graphs++;
+                        else if(x.equals("data structures")) dataStructure++;
+                        else if(x.equals("brute force")) bruteforce++;
+                        else if(x.equals("dp")) dp++;
+                    }
+                    acSet.add(tmp);
+                }
             }
         }
         codeforces.setAllSolvedNumber(acSet.size());
+        tagsStatistics.setMath(math);
+        tagsStatistics.setGreedy(greedy);
+        tagsStatistics.setGraphs(graphs);
+        tagsStatistics.setDataStructure(dataStructure);
+        tagsStatistics.setBruteforce(bruteforce);
+        tagsStatistics.setDp(dp);
 
-        log.info("更新完成：{}",codeforces.toString());
+        tagsStatisticsDao.update(tagsStatistics);
+        log.info("更新完成：{}", codeforces);
         countDownLatch.countDown();
     }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljf.ploughthewaves.infrastructure.dao.TagsStatisticsDao">
+    <insert id="insert" parameterType="com.ljf.ploughthewaves.infrastructure.po.TagsStatistics">
+        insert into tags_statistics (id, uid, bruteforce, greedy, math, data_structure, graphs, dp, cf_problem, upd_time)
+            value (#{id},#{uid},#{bruteforce},#{greedy},#{math},#{dataStructure},#{graphs},#{dp},#{cfProblem},now());
+    </insert>
+    <delete id="deleteByUid" parameterType="Integer">
+        delete from tags_statistics
+        where uid = #{uid};
+    </delete>
+    <update id="update" parameterType="com.ljf.ploughthewaves.infrastructure.po.TagsStatistics">
+        update tags_statistics
+        set math = #{math},greedy = #{greedy},graphs = #{graphs},data_structure = #{dataStructures},
+            bruteforce = #{bruteforce},dp = #{dp},cf_problem = #{cfProblem},upd_time = now()
+        where uid = #{uid}
+    </update>
+
+    <resultMap id="tagsStatistics" type="com.ljf.ploughthewaves.infrastructure.po.TagsStatistics">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="math" column="math"/>
+        <result property="greedy" column="greedy"/>
+        <result property="graphs" column="graphs"/>
+        <result property="dataStructure" column="data_structure"/>
+        <result property="bruteforce" column="bruteforce"/>
+        <result property="dp" column="dp"/>
+        <result property="cfProblem" column="cf_problem"/>
+        <result property="updTime" column="upd_time"/>
+    </resultMap>
+    <select id="queryByUid" parameterType="Integer" resultMap="tagsStatistics">
+        select id, uid, bruteforce, greedy, math, data_structure, graphs, dp, cf_problem, upd_time
+        from tags_statistics
+        where uid = #{uid}
+    </select>
+</mapper>

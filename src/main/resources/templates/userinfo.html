@@ -202,7 +202,7 @@
                     let html = "<div class=\"col-lg-4 grid-margin stretch-card\">\n" +
                         "<div class=\"card\">\n" +
                         "<div class=\"card-body\">" +
-                        "<h4 class=\"card-title\">" + ex.ojName + "</h4>" +
+                        "<h4 class=\"card-title\">" + ex.ojName + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;更新时间:&nbsp;" + ex.updTime + "</h4>" +
                         "<div class=\"template-demo\">";
                     html += "<h5> Handle : " + "<small class=\"text-muted\">" + ex.ojUsername + "</small> </h5>";
                     if(ex.nowRating != null) {
@@ -241,24 +241,12 @@
                     "name" : $("#authname").html()
                 },
                 success(msg) {
-                    if(msg == 1) location.reload();
+                    if(msg == 1) {
+                        alert("已提交更新，请稍后刷新");
+                        location.reload();
+                    }
                 }
             })
-            // let num = 30;
-            // $("#upd").text(num + 's');
-            // $("#upd").attr('disabled','true');
-            // $("#upd").css('cursor','auto');
-            // let interval = setInterval(function () {
-            //     num--;
-            //     if (num < 0) {
-            //         $("#upd").text("更新pt");
-            //         $("#upd").removeAttr('disabled');
-            //         $("#upd").css('cursor', 'pointer');
-            //         clearInterval(interval);
-            //     } else {
-            //         $("#upd").text(num + 's');
-            //     }
-            // }, 1000);
         })
 
         $("#bindsubmit").click(function () {

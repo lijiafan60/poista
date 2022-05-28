@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8">
@@ -18,13 +18,14 @@
             <div class="row w-100 mx-0">
                 <div class="col-lg-4 mx-auto">
                     <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                        <span id="authname" sec:authentication="name"></span>
                         <div class="brand-logo">
                             <img src="../../images/logo.svg" alt="logo">
                         </div>
                         <h4>修改密码</h4>
                         <div class="pt-3">
                             <div class="form-group">
-                                <input id="name" type="text" class="form-control form-control-lg" placeholder="用户名">
+                                <input id="name" type="text" readonly="readonly" class="form-control form-control-lg">
                             </div>
                             <div class="form-group">
                                 <input id="pwd1" type="password" class="form-control form-control-lg" placeholder="新密码">
@@ -42,9 +43,6 @@
                                        class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" >提交</button>
                             </div>
                             <div class="text-center mt-4 font-weight-light">
-                                <span id="howGetName">怎么获取账号？</span>
-                            </div>
-                            <div class="text-center mt-4 font-weight-light">
                                 <a th:href="@{/login}" class="text-primary">去登录</a>
                             </div>
                         </div>
@@ -60,12 +58,15 @@
 <script src="../../js/template.js"></script>
 <script>
     $(function (){
+        $("#authname").hide();
+        $("#name").attr('placeholder',$("#authname").html());
         $("#pwd2").keyup(function (){
             if($("#pwd1").val() == $("#pwd2").val()) $("#pwd2").css("color","green");
             else $("#pwd2").css("color","red");
         })
         $("#modifyPwd").click(function (){
             if($("#name").val() == "") alert("请输入用户名");
+            else if($("#pwd1").val() == "") alert("密码不能为空");
             else if($("#name").val() == "anonymousUser") alert("非法用户名");
             else if($("#pwd1").val() == $("#pwd2").val())
             {
@@ -84,9 +85,6 @@
                 })
             }
             else alert("两次密码输入不一致!");
-        })
-        $("#howGetName").click( function () {
-            alert("关注微信公众号,获取登录账号");
         })
     })
 </script>

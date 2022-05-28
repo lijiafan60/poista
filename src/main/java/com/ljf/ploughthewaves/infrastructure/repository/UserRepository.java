@@ -161,6 +161,7 @@ public class UserRepository implements IUserRepository {
             ojInfo.setOjUsername(x.getOjUsername());
 
             ojInfo.setAllSolvedNumber(x.getAllSolvedNumber());
+            ojInfo.setUpdTime(x.getUpdTime());
 
             ojInfoList.add(ojInfo);
         }
@@ -178,6 +179,7 @@ public class UserRepository implements IUserRepository {
             ojInfo.setRecentContestNumber(x.getRecentContestNumber());
 
             ojInfo.setAllSolvedNumber(x.getAllSolvedNumber());
+            ojInfo.setUpdTime(x.getUpdTime());
 
             ojInfoList.add(ojInfo);
         }

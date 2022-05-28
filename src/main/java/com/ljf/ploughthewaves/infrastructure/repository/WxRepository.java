@@ -4,13 +4,11 @@ import com.ljf.ploughthewaves.application.mq.producer.KafkaProducer;
 import com.ljf.ploughthewaves.domain.poista.model.req.CrawlReq;
 import com.ljf.ploughthewaves.domain.poista.service.util.OjFilter;
 import com.ljf.ploughthewaves.domain.wx.repository.IWxRepository;
+import com.ljf.ploughthewaves.infrastructure.dao.TagsStatisticsDao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj1Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserAndOj2Dao;
 import com.ljf.ploughthewaves.infrastructure.dao.UserDao;
-import com.ljf.ploughthewaves.infrastructure.po.BindInfo;
-import com.ljf.ploughthewaves.infrastructure.po.User;
-import com.ljf.ploughthewaves.infrastructure.po.UserAndOj1;
-import com.ljf.ploughthewaves.infrastructure.po.UserAndOj2;
+import com.ljf.ploughthewaves.infrastructure.po.*;
 import com.ljf.ploughthewaves.infrastructure.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.support.SendResult;
@@ -37,6 +35,8 @@ public class WxRepository implements IWxRepository {
     private KafkaProducer kafkaProducer;
     @Resource
     private RedisUtil redisUtil;
+    @Resource
+    private TagsStatisticsDao tagsStatisticsDao;
 
     /**
      * 用户订阅时添加用户
@@ -54,9 +54,23 @@ public class WxRepository implements IWxRepository {
         user.setIsAdmin(false);
         user.setIsPublic(false);
         user.setRole("ROLE_user");
+
         userDao.insert(user);
+
+        user = userDao.queryUserByOpenid(openid);
         redisUtil.set(openid, user);
         redisUtil.set(user.getName(), user);
+
+        TagsStatistics tagsStatistics = new TagsStatistics();
+        tagsStatistics.setUid(user.getId());
+        tagsStatistics.setBruteforce(0);
+        tagsStatistics.setDataStructure(0);
+        tagsStatistics.setDp(0);
+        tagsStatistics.setGraphs(0);
+        tagsStatistics.setGreedy(0);
+        tagsStatistics.setMath(0);
+
+        tagsStatisticsDao.insert(tagsStatistics);
     }
 
     /**
@@ -72,13 +86,11 @@ public class WxRepository implements IWxRepository {
         String name = user.getName();
         Integer id = user.getId();
         redisUtil.del(openid,name);
-        log.info("删除的用户id为：{}",id);
         userDao.delete(id);
-        log.info("user表删除成功");
         userAndOj1Dao.deleteByUid(id);
-        log.info("userAndOj1表删除成功");
         userAndOj2Dao.deleteByUid(id);
-        log.info("userAndOj2表删除成功");
+        tagsStatisticsDao.deleteByUid(id);
+        log.info("用户{}信息清理完成",id);
     }
 
     /**
