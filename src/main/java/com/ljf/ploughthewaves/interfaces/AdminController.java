@@ -145,6 +145,7 @@ public class AdminController {
             stuInfoExcel.setAcRating(stuInfoList.get(i).getAcRating());
             stuInfoExcel.setAcMaxRating(stuInfoList.get(i).getAcMaxRating());
             stuInfoExcel.setAcContestNumber(stuInfoList.get(i).getAcContestNumber());
+            stuInfoExcel.setAllSolvedNumber(stuInfoList.get(i).getAllSolvedNumber());
             stuInfoExcel.setPt(stuInfoList.get(i).getPt());
             stuInfoExcelList.add(stuInfoExcel);
         }
