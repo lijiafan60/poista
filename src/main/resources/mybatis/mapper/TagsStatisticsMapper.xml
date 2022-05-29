@@ -13,7 +13,7 @@
     </delete>
     <update id="update" parameterType="com.ljf.ploughthewaves.infrastructure.po.TagsStatistics">
         update tags_statistics
-        set math = #{math},greedy = #{greedy},graphs = #{graphs},data_structure = #{dataStructures},
+        set math = #{math},greedy = #{greedy},graphs = #{graphs},data_structure = #{dataStructure},
             bruteforce = #{bruteforce},dp = #{dp},cf_problem = #{cfProblem},upd_time = now()
         where uid = #{uid}
     </update>
