@@ -59,7 +59,7 @@
 <script>
     $(function (){
         $("#authname").hide();
-        $("#name").attr('placeholder',$("#authname").html());
+        $("#name").attr('value',$("#authname").html());
         $("#pwd2").keyup(function (){
             if($("#pwd1").val() == $("#pwd2").val()) $("#pwd2").css("color","green");
             else $("#pwd2").css("color","red");
