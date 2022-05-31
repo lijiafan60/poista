@@ -17,7 +17,7 @@
         <div class="content-wrapper d-flex align-items-center auth px-0">
             <div class="row w-100 mx-0">
                 <div class="col-lg-4 mx-auto">
-                    <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                    <div id="registerForm" class="auth-form-light text-left py-5 px-4 px-sm-5" style="display: block">
                         <div class="brand-logo">
                             <img src="../../images/logo.svg" alt="logo">
                         </div>
@@ -47,6 +47,15 @@
                             <div class="text-center mt-4 font-weight-light">
                                 <a th:href="@{/login}" class="text-primary">登录</a>
                             </div>
+                        </div>
+                    </div>
+                    <div id="2dc" class="img-fluid py-5 px-4 px-sm-5" style="display: none">
+                        <img src="../images/gzh-2dc.jpg">
+                        <div class="text-center mt-4 font-weight-light">
+                            <span>关注微信公众号获取账号</span>
+                        </div>
+                        <div class="text-center mt-4 font-weight-light">
+                            <a th:href="@{/register}" class="text-primary">返回</a>
                         </div>
                     </div>
                 </div>
@@ -87,7 +96,8 @@
             else alert("两次密码输入不一致!");
         })
         $("#howGetName").click( function () {
-            alert("关注微信公众号,获取登录账号");
+            $("#registerForm").css("display","none");
+            $("#2dc").css("display","block");
         })
     })
 </script>
