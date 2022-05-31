@@ -27,7 +27,7 @@ public class SubscribeFilter implements LogicFilter {
                 "更新统计情况:3\n" +
                 "设置姓名学校:4 姓名 学校\n" +
                 "查看所有绑定的oj信息:5\n" +
-                "查看openid（登录后台账号）:6\n" +
+                "查看网页端账号和密码:6\n" +
                 "tips: \n" +
                 "1.后台将以学校为分组，对用户进行分组统计\n" +
                 "2.每个分组可以有一个管理员能查看分组内的所有人的数据\n" +
