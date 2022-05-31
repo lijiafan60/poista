@@ -41,10 +41,13 @@ public class AdminController {
      */
     @PostMapping("/getStuInfo")
     public List<StuInfo> getStuInfo(@RequestParam String name) {
+        log.info(name);
         if(name == null) return null;
         User user = (User) redisUtil.get(name);
+        log.info(user.toString());
         if(user == null) {
             user = userRepository.findUserByUsername(name);
+            log.info(user.toString());
             if(user == null) return null;
             redisUtil.set(name,user);
             redisUtil.set(user.getOpenId(),user);

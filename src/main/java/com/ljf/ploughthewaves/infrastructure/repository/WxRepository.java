@@ -142,6 +142,8 @@ public class WxRepository implements IWxRepository {
         user.setName(name);
         user.setSchool(school);
         user.setIsPublic(Boolean.TRUE);
+        user.setIsAdmin(user0.getIsAdmin());
+        user.setRole(user0.getRole());
         userDao.setDetailInfo(user);
         redisUtil.del(name,openid);
         return 1;
