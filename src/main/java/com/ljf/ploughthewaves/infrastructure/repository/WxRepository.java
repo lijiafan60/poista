@@ -135,17 +135,13 @@ public class WxRepository implements IWxRepository {
      */
     @Override
     public Integer setDetailInfo(String openid, String name, String school) {
-        User user0 = userDao.queryUserByOpenid(openid);
+        User user0 = userDao.queryUserByName(name);
         if(user0 != null) return -1;
-        User user = new User();
-        user.setOpenId(openid);
+        User user = userDao.queryUserByOpenid(openid);
+        redisUtil.del(user.getName(),openid);
         user.setName(name);
         user.setSchool(school);
-        user.setIsPublic(Boolean.TRUE);
-        user.setIsAdmin(user0.getIsAdmin());
-        user.setRole(user0.getRole());
         userDao.setDetailInfo(user);
-        redisUtil.del(user0.getName(),openid);
         return 1;
     }
 
