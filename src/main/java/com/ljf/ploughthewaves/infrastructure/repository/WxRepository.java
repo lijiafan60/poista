@@ -135,7 +135,7 @@ public class WxRepository implements IWxRepository {
      */
     @Override
     public Integer setDetailInfo(String openid, String name, String school) {
-        User user0 = userDao.queryUserByName(name);
+        User user0 = userDao.queryUserByOpenid(openid);
         if(user0 != null) return -1;
         User user = new User();
         user.setOpenId(openid);
