@@ -7,16 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="plough_the_waves" />
+        <module name="poista" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="plough_the_waves" target="1.8" />
+      <module name="poista" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="plough_the_waves" options="-parameters" />
+      <module name="poista" options="-parameters" />
     </option>
   </component>
 </project>

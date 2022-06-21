@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ljf</groupId>
-    <artifactId>PloughTheWaves</artifactId>
+    <artifactId>poista</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PloughTheWaves</name>
-    <description>PloughTheWaves</description>
+    <name>poista</name>
+    <description>ACMER刷题统计平台</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -134,24 +134,32 @@
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.13</version>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.0</version>
                 <executions>
                     <execution>
-                        <id>default</id>
+                        <id>build-image</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>build</goal>
-                            <goal>push</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>${project.name}</repository>
-                    <tag>${project.version}</tag>
-                    <buildArgs>
-                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                    </buildArgs>
-                    <dockerfile>src/main/docker/Dockerfile</dockerfile>
+                    <imageName>${project.artifactId}/${project.artifactId}</imageName>
+                    <!--                    <imageTags>-->
+                    <!--                        <imageTag>${project.version}</imageTag>-->
+                    <!--                    </imageTags>-->
+                    <!--                    <forceTags>true</forceTags>-->
+                    <dockerHost>http://120.48.56.6:9391</dockerHost>
+                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
         </plugins>
